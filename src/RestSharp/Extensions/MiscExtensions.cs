@@ -18,13 +18,11 @@ using System.Linq;
 using System.Text;
 using RestSharp.Authenticators.OAuth.Extensions;
 
-namespace RestSharp.Extensions
-{
+namespace RestSharp.Extensions {
     /// <summary>
     /// Extension method overload!
     /// </summary>
-    public static class MiscExtensions
-    {
+    public static class MiscExtensions {
         /// <summary>
         /// Save a byte array to a file
         /// </summary>
@@ -39,16 +37,14 @@ namespace RestSharp.Extensions
         /// <param name="input">Stream to read</param>
         /// <returns>byte[]</returns>
         [Obsolete("This method will be removed soon. If you use it, please copy the code to your project.")]
-        public static byte[] ReadAsBytes(this Stream input)
-        {
+        public static byte[] ReadAsBytes(this Stream input) {
             var buffer = new byte[16 * 1024];
 
             using var ms = new MemoryStream();
 
             int read;
 
-            while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                ms.Write(buffer, 0, read);
+            while ((read = input.Read(buffer, 0, buffer.Length)) > 0) ms.Write(buffer, 0, read);
 
             return ms.ToArray();
         }
@@ -59,20 +55,16 @@ namespace RestSharp.Extensions
         /// <param name="input">The input stream.</param>
         /// <param name="output">The output stream.</param>
         [Obsolete("This method will be removed soon. If you use it, please copy the code to your project.")]
-        public static void CopyTo(this Stream input, Stream output)
-        {
+        public static void CopyTo(this Stream input, Stream output) {
             var buffer = new byte[32768];
 
-            while (true)
-            {
+            while (true) {
                 var read = input.Read(buffer, 0, buffer.Length);
 
-                if (read <= 0)
-                    return;
+                if (read <= 0) return;
 
                 output.Write(buffer, 0, read);
             }
         }
-
     }
 }

@@ -16,13 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 
-namespace RestSharp
-{
+namespace RestSharp {
     /// <summary>
     /// HTTP response data
     /// </summary>
-    public interface IHttpResponse
-    {
+    public interface IHttpResponse {
         /// <summary>
         /// MIME content type of response
         /// </summary>

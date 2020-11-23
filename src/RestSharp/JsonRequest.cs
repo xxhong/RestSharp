@@ -7,10 +7,9 @@ namespace RestSharp
 {
     public class JsonRequest<TRequest, TResponse> : RestRequest
     {
-        readonly List<Action<IRestResponse<TResponse>>> _changeResponse = new List<Action<IRestResponse<TResponse>>>();
+        readonly List<Action<IRestResponse<TResponse>>> _changeResponse = new();
 
-        readonly Dictionary<HttpStatusCode, Func<TResponse>> _customResponses =
-            new Dictionary<HttpStatusCode, Func<TResponse>>();
+        readonly Dictionary<HttpStatusCode, Func<TResponse>> _customResponses = new();
 
         public JsonRequest(string resource, TRequest request) : base(resource)
         {

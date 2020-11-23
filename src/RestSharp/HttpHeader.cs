@@ -15,21 +15,18 @@
 using System;
 using JetBrains.Annotations;
 
-namespace RestSharp
-{
+namespace RestSharp {
     /// <summary>
     /// Representation of an HTTP header
     /// </summary>
     [PublicAPI]
-    public class HttpHeader
-    {
+    public class HttpHeader {
         /// <summary>
         /// Creates a new instance of HttpHeader
         /// </summary>
         /// <param name="name">Header name</param>
         /// <param name="value">Header value</param>
-        public HttpHeader(string name, string? value)
-        {
+        public HttpHeader(string name, string? value) {
             Name  = name;
             Value = value ?? "";
         }

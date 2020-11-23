@@ -15,13 +15,11 @@
 using System;
 using System.IO;
 
-namespace RestSharp
-{
+namespace RestSharp {
     /// <summary>
     /// Container for files to be uploaded with requests
     /// </summary>
-    public class FileParameter
-    {
+    public class FileParameter {
         /// <summary>
         /// The length of data to be sent
         /// </summary>
@@ -30,22 +28,32 @@ namespace RestSharp
         /// <summary>
         /// Provides raw data for file
         /// </summary>
-        public Action<Stream> Writer { get; set; }
+        public Action<Stream> Writer { get; set; } = null!;
 
         /// <summary>
         /// Name of the file to use when uploading
         /// </summary>
-        public string FileName { get; set; }
+        public string FileName { get; set; } = null!;
 
         /// <summary>
         /// MIME content type of file
         /// </summary>
-        public string ContentType { get; set; }
+        public string? ContentType { get; set; }
 
         /// <summary>
         /// Name of the parameter
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
+
+        public FileParameter() { }
+
+        FileParameter(string name, string fileName, string? contentType, long contentLength, Action<Stream> writer) {
+            Name          = name;
+            FileName      = fileName;
+            ContentType   = contentType;
+            ContentLength = contentLength;
+            Writer        = writer;
+        }
 
         /// <summary>
         /// Creates a file parameter from an array of bytes.
@@ -55,15 +63,8 @@ namespace RestSharp
         /// <param name="filename">The filename to use in the request.</param>
         /// <param name="contentType">The content type to use in the request.</param>
         /// <returns>The <see cref="FileParameter" /></returns>
-        public static FileParameter Create(string name, byte[] data, string filename, string contentType)
-            => new FileParameter
-            {
-                Writer        = s => s.Write(data, 0, data.Length),
-                FileName      = filename,
-                ContentType   = contentType,
-                ContentLength = data.LongLength,
-                Name          = name
-            };
+        public static FileParameter Create(string name, byte[] data, string filename, string? contentType)
+            => new(name, filename, contentType, data.LongLength, s => s.Write(data, 0, data.Length));
 
         /// <summary>
         /// Creates a file parameter from an array of bytes.
@@ -88,15 +89,8 @@ namespace RestSharp
             Action<Stream> writer,
             long contentLength,
             string fileName,
-            string contentType = null
+            string? contentType = null
         )
-            => new FileParameter
-            {
-                Name          = name,
-                FileName      = fileName,
-                ContentType   = contentType,
-                Writer        = writer,
-                ContentLength = contentLength
-            };
+            => new(name, fileName, contentType, contentLength, writer);
     }
 }

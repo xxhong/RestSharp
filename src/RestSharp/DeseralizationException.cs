@@ -13,11 +13,11 @@
 //   limitations under the License. 
 
 using System;
+using JetBrains.Annotations;
 
-namespace RestSharp
-{
-    public class DeserializationException : Exception
-    {
+namespace RestSharp {
+    [PublicAPI]
+    public class DeserializationException : Exception {
         public DeserializationException(IRestResponse response, Exception innerException)
             : base("Error occured while deserializing the response", innerException)
             => Response = response;

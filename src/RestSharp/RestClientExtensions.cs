@@ -18,20 +18,22 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using RestSharp.Serialization;
 
-namespace RestSharp
-{
-    public static partial class RestClientExtensions
-    {
+namespace RestSharp {
+    /// <summary>
+    /// 
+    /// </summary>
+    [PublicAPI]
+    public static partial class RestClientExtensions {
         /// <summary>
         /// Execute the request and returns a response with the dynamic object as Data
         /// </summary>
         /// <param name="client">RestClient instance</param>
         /// <param name="request">The request</param>
         /// <returns></returns>
-        public static IRestResponse<dynamic> ExecuteDynamic(this IRestClient client, IRestRequest request)
-        {
+        public static IRestResponse<dynamic> ExecuteDynamic(this IRestClient client, IRestRequest request) {
             var     response = client.Execute<dynamic>(request);
             var     generic  = (RestResponse<dynamic>) response;
             dynamic content  = client.Deserialize<object>(response);
@@ -50,10 +52,10 @@ namespace RestSharp
         /// <param name="cancellationToken">Cancellation token</param>
         /// <typeparam name="T">Expected result type</typeparam>
         /// <returns></returns>
-        public static async Task<T> GetAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default)
-        {
+        public static async Task<T> GetAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default) {
             var response = await client.ExecuteGetAsync<T>(request, cancellationToken);
             ThrowIfError(response);
+
             return response.Data;
         }
 
@@ -66,10 +68,10 @@ namespace RestSharp
         /// <param name="cancellationToken">Cancellation token</param>
         /// <typeparam name="T">Expected result type</typeparam>
         /// <returns></returns>
-        public static async Task<T> PostAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default)
-        {
+        public static async Task<T> PostAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default) {
             var response = await client.ExecutePostAsync<T>(request, cancellationToken);
             ThrowIfError(response);
+
             return response.Data;
         }
 
@@ -82,10 +84,10 @@ namespace RestSharp
         /// <param name="cancellationToken">Cancellation token</param>
         /// <typeparam name="T">Expected result type</typeparam>
         /// <returns></returns>
-        public static async Task<T> PutAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default)
-        {
+        public static async Task<T> PutAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default) {
             var response = await client.ExecuteAsync<T>(request, Method.PUT, cancellationToken);
             ThrowIfError(response);
+
             return response.Data;
         }
 
@@ -98,10 +100,10 @@ namespace RestSharp
         /// <param name="cancellationToken">Cancellation token</param>
         /// <typeparam name="T">Expected result type</typeparam>
         /// <returns></returns>
-        public static async Task<T> HeadAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default)
-        {
+        public static async Task<T> HeadAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default) {
             var response = await client.ExecuteAsync<T>(request, Method.HEAD, cancellationToken);
             ThrowIfError(response);
+
             return response.Data;
         }
 
@@ -114,10 +116,10 @@ namespace RestSharp
         /// <param name="cancellationToken">Cancellation token</param>
         /// <typeparam name="T">Expected result type</typeparam>
         /// <returns></returns>
-        public static async Task<T> OptionsAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default)
-        {
+        public static async Task<T> OptionsAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default) {
             var response = await client.ExecuteAsync<T>(request, Method.OPTIONS, cancellationToken);
             ThrowIfError(response);
+
             return response.Data;
         }
 
@@ -130,10 +132,10 @@ namespace RestSharp
         /// <param name="cancellationToken">Cancellation token</param>
         /// <typeparam name="T">Expected result type</typeparam>
         /// <returns></returns>
-        public static async Task<T> PatchAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default)
-        {
+        public static async Task<T> PatchAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default) {
             var response = await client.ExecuteAsync<T>(request, Method.PATCH, cancellationToken);
             ThrowIfError(response);
+
             return response.Data;
         }
 
@@ -146,10 +148,10 @@ namespace RestSharp
         /// <param name="cancellationToken">Cancellation token</param>
         /// <typeparam name="T">Expected result type</typeparam>
         /// <returns></returns>
-        public static async Task<T> DeleteAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default)
-        {
+        public static async Task<T> DeleteAsync<T>(this IRestClient client, IRestRequest request, CancellationToken cancellationToken = default) {
             var response = await client.ExecuteAsync<T>(request, Method.DELETE, cancellationToken);
             ThrowIfError(response);
+
             return response.Data;
         }
 
@@ -236,7 +238,8 @@ namespace RestSharp
         /// <param name="client">RestClient instance</param>
         /// <param name="request">The request</param>
         /// <returns></returns>
-        public static IRestResponse Get(this IRestClient client, IRestRequest request) => client.Execute(request, Method.GET);
+        public static IRestResponse Get(this IRestClient client, IRestRequest request)
+            => client.Execute(request, Method.GET);
 
         /// <summary>
         /// Execute the request using POST HTTP method.
@@ -244,7 +247,8 @@ namespace RestSharp
         /// <param name="client">RestClient instance</param>
         /// <param name="request">The request</param>
         /// <returns></returns>
-        public static IRestResponse Post(this IRestClient client, IRestRequest request) => client.Execute(request, Method.POST);
+        public static IRestResponse Post(this IRestClient client, IRestRequest request)
+            => client.Execute(request, Method.POST);
 
         /// <summary>
         /// Execute the request using PUT HTTP method.
@@ -252,7 +256,8 @@ namespace RestSharp
         /// <param name="client">RestClient instance</param>
         /// <param name="request">The request</param>
         /// <returns></returns>
-        public static IRestResponse Put(this IRestClient client, IRestRequest request) => client.Execute(request, Method.PUT);
+        public static IRestResponse Put(this IRestClient client, IRestRequest request)
+            => client.Execute(request, Method.PUT);
 
         /// <summary>
         /// Execute the request using HEAD HTTP method.
@@ -260,7 +265,8 @@ namespace RestSharp
         /// <param name="client">RestClient instance</param>
         /// <param name="request">The request</param>
         /// <returns></returns>
-        public static IRestResponse Head(this IRestClient client, IRestRequest request) => client.Execute(request, Method.HEAD);
+        public static IRestResponse Head(this IRestClient client, IRestRequest request)
+            => client.Execute(request, Method.HEAD);
 
         /// <summary>
         /// Execute the request using OPTIONS HTTP method.
@@ -268,7 +274,8 @@ namespace RestSharp
         /// <param name="client">RestClient instance</param>
         /// <param name="request">The request</param>
         /// <returns></returns>
-        public static IRestResponse Options(this IRestClient client, IRestRequest request) => client.Execute(request, Method.OPTIONS);
+        public static IRestResponse Options(this IRestClient client, IRestRequest request)
+            => client.Execute(request, Method.OPTIONS);
 
         /// <summary>
         /// Execute the request using PATCH HTTP method.
@@ -276,7 +283,8 @@ namespace RestSharp
         /// <param name="client">RestClient instance</param>
         /// <param name="request">The request</param>
         /// <returns></returns>
-        public static IRestResponse Patch(this IRestClient client, IRestRequest request) => client.Execute(request, Method.PATCH);
+        public static IRestResponse Patch(this IRestClient client, IRestRequest request)
+            => client.Execute(request, Method.PATCH);
 
         /// <summary>
         /// Execute the request using DELETE HTTP method.
@@ -284,7 +292,8 @@ namespace RestSharp
         /// <param name="client">RestClient instance</param>
         /// <param name="request">The request</param>
         /// <returns></returns>
-        public static IRestResponse Delete(this IRestClient client, IRestRequest request) => client.Execute(request, Method.DELETE);
+        public static IRestResponse Delete(this IRestClient client, IRestRequest request)
+            => client.Execute(request, Method.DELETE);
 
         /// <summary>
         /// Add a parameter to use on every request made with this client instance
@@ -292,8 +301,7 @@ namespace RestSharp
         /// <param name="restClient">The IRestClient instance</param>
         /// <param name="p">Parameter to add</param>
         /// <returns></returns>
-        public static IRestClient AddDefaultParameter(this IRestClient restClient, Parameter p)
-        {
+        public static IRestClient AddDefaultParameter(this IRestClient restClient, Parameter p) {
             if (p.Type == ParameterType.RequestBody)
                 throw new NotSupportedException(
                     "Cannot set request body from default headers. Use Request.AddBody() instead."
@@ -310,8 +318,7 @@ namespace RestSharp
         /// <param name="restClient"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public static IRestClient AddOrUpdateDefaultParameter(this IRestClient restClient, Parameter p)
-        {
+        public static IRestClient AddOrUpdateDefaultParameter(this IRestClient restClient, Parameter p) {
             var existing = restClient.DefaultParameters.FirstOrDefault(x => x.Name == p.Name);
 
             if (existing != null) restClient.DefaultParameters.Remove(existing);
@@ -327,8 +334,7 @@ namespace RestSharp
         /// <param name="restClient">The IRestClient instance</param>
         /// <param name="name">The name of the parameter that needs to be removed</param>
         /// <returns></returns>
-        public static IRestClient RemoveDefaultParameter(this IRestClient restClient, string name)
-        {
+        public static IRestClient RemoveDefaultParameter(this IRestClient restClient, string name) {
             var parameter = restClient.DefaultParameters.SingleOrDefault(
                 p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
             );
@@ -386,10 +392,8 @@ namespace RestSharp
         /// <param name="restClient">The IRestClient instance</param>
         /// <param name="headers">Dictionary containing the Names and Values of the headers to add</param>
         /// <returns></returns>
-        public static IRestClient AddDefaultHeaders(this IRestClient restClient, Dictionary<string, string> headers)
-        {
-            foreach (var header in headers)
-                restClient.AddOrUpdateDefaultParameter(new Parameter(header.Key, header.Value, ParameterType.HttpHeader));
+        public static IRestClient AddDefaultHeaders(this IRestClient restClient, Dictionary<string, string> headers) {
+            foreach (var header in headers) restClient.AddOrUpdateDefaultParameter(new Parameter(header.Key, header.Value, ParameterType.HttpHeader));
 
             return restClient;
         }
@@ -414,10 +418,8 @@ namespace RestSharp
         public static IRestClient AddDefaultQueryParameter(this IRestClient restClient, string name, string value)
             => restClient.AddDefaultParameter(name, value, ParameterType.QueryString);
 
-        static void ThrowIfError(IRestResponse response)
-        {
-            var exception = response.ResponseStatus switch
-            {
+        static void ThrowIfError(IRestResponse response) {
+            var exception = response.ResponseStatus switch {
                 ResponseStatus.Aborted   => new WebException("Request aborted", response.ErrorException),
                 ResponseStatus.Error     => response.ErrorException,
                 ResponseStatus.TimedOut  => new TimeoutException("Request timed out", response.ErrorException),
@@ -426,8 +428,7 @@ namespace RestSharp
                 _                        => throw response.ErrorException ?? new ArgumentOutOfRangeException()
             };
 
-            if (exception != null)
-                throw exception;
+            if (exception != null) throw exception;
         }
 
         /// <summary>
@@ -435,10 +436,8 @@ namespace RestSharp
         /// </summary>
         /// <param name="client">The client instance</param>
         /// <returns></returns>
-        public static RestClient UseJson(this RestClient client)
-        {
-            foreach (var contentType in ContentType.XmlAccept)
-                client.RemoveHandler(contentType);
+        public static RestClient UseJson(this RestClient client) {
+            foreach (var contentType in ContentType.XmlAccept) client.RemoveHandler(contentType);
 
             client.Serializers.Remove(DataFormat.Xml);
 
@@ -450,10 +449,8 @@ namespace RestSharp
         /// </summary>
         /// <param name="client"></param>
         /// <returns></returns>
-        public static RestClient UseXml(this RestClient client)
-        {
-            foreach (var contentType in ContentType.JsonAccept)
-                client.RemoveHandler(contentType);
+        public static RestClient UseXml(this RestClient client) {
+            foreach (var contentType in ContentType.JsonAccept) client.RemoveHandler(contentType);
 
             client.Serializers.Remove(DataFormat.Json);
 

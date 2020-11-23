@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
 using NUnit.Framework;
 using RestSharp.Serialization.Xml;
@@ -11,17 +9,14 @@ using RestSharp.Tests.SampleClasses;
 using static RestSharp.Tests.TestData.Resources;
 using Event = RestSharp.Tests.SampleClasses.Lastfm.Event;
 
-namespace RestSharp.Tests
-{
-    public class XmlAttributeDeserializerTests
-    {
+namespace RestSharp.Tests {
+    public class XmlAttributeDeserializerTests {
         const string GuidString = "AC1FC4BC-087A-4242-B8EE-C53EBE9887A5";
 
         [Test]
-        public void Can_Deserialize_Lists_of_Simple_Types()
-        {
+        public void Can_Deserialize_Lists_of_Simple_Types() {
             var doc = LoadFromResource("xmllists.xml");
-            var xml     = new XmlAttributeDeserializer();
+            var xml = new XmlAttributeDeserializer();
 
             var output = xml.Deserialize<SimpleTypesListSample>(
                 new RestResponse {Content = doc.ToString()}
@@ -34,11 +29,10 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_To_List_Inheritor_From_Custom_Root_With_Attributes()
-        {
-            var doc = LoadFromResource("ListWithAttributes.xml");
-            var xml     = new XmlAttributeDeserializer {RootElement = "Calls"};
-            var output  = xml.Deserialize<TwilioCallList>(new RestResponse {Content = doc.ToString()});
+        public void Can_Deserialize_To_List_Inheritor_From_Custom_Root_With_Attributes() {
+            var doc    = LoadFromResource("ListWithAttributes.xml");
+            var xml    = new XmlAttributeDeserializer {RootElement = "Calls"};
+            var output = xml.Deserialize<TwilioCallList>(new RestResponse {Content = doc.ToString()});
 
             Assert.AreEqual(3, output.NumPages);
             Assert.IsNotEmpty(output);
@@ -46,95 +40,86 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_To_Standalone_List_Without_Matching_Class_Case()
-        {
-            var doc = LoadFromResource("InlineListSample.xml");
-            var xml     = new XmlAttributeDeserializer();
-            var output  = xml.Deserialize<List<Image>>(new RestResponse {Content = doc.ToString()});
+        public void Can_Deserialize_To_Standalone_List_Without_Matching_Class_Case() {
+            var doc    = LoadFromResource("InlineListSample.xml");
+            var xml    = new XmlAttributeDeserializer();
+            var output = xml.Deserialize<List<Image>>(new RestResponse {Content = doc.ToString()});
 
             Assert.IsNotEmpty(output);
             Assert.AreEqual(4, output.Count);
         }
 
         [Test]
-        public void Can_Deserialize_To_Standalone_List_With_Matching_Class_Case()
-        {
-            var doc = LoadFromResource("InlineListSample.xml");
-            var xml     = new XmlAttributeDeserializer();
-            var output  = xml.Deserialize<List<image>>(new RestResponse {Content = doc.ToString()});
+        public void Can_Deserialize_To_Standalone_List_With_Matching_Class_Case() {
+            var doc    = LoadFromResource("InlineListSample.xml");
+            var xml    = new XmlAttributeDeserializer();
+            var output = xml.Deserialize<List<image>>(new RestResponse {Content = doc.ToString()});
 
             Assert.IsNotEmpty(output);
             Assert.AreEqual(4, output.Count);
         }
 
         [Test]
-        public void Can_Deserialize_Directly_To_Lists_Off_Root_Element()
-        {
-            var doc = LoadFromResource("directlists.xml");
-            var xml     = new XmlAttributeDeserializer();
-            var output  = xml.Deserialize<List<Database>>(new RestResponse {Content = doc.ToString()});
+        public void Can_Deserialize_Directly_To_Lists_Off_Root_Element() {
+            var doc    = LoadFromResource("directlists.xml");
+            var xml    = new XmlAttributeDeserializer();
+            var output = xml.Deserialize<List<Database>>(new RestResponse {Content = doc.ToString()});
 
             Assert.IsNotEmpty(output);
             Assert.AreEqual(2, output.Count);
         }
 
         [Test]
-        public void Can_Deserialize_Parentless_aka_Inline_List_Items_Without_Matching_Class_Name()
-        {
-            var doc = LoadFromResource("InlineListSample.xml");
-            var xml     = new XmlAttributeDeserializer();
-            var output  = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
+        public void Can_Deserialize_Parentless_aka_Inline_List_Items_Without_Matching_Class_Name() {
+            var doc    = LoadFromResource("InlineListSample.xml");
+            var xml    = new XmlAttributeDeserializer();
+            var output = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
 
             Assert.IsNotEmpty(output.Images);
             Assert.AreEqual(4, output.Images.Count);
         }
 
         [Test]
-        public void Can_Deserialize_Parentless_aka_Inline_List_Items_With_Matching_Class_Name()
-        {
-            var doc = LoadFromResource("InlineListSample.xml");
-            var xml     = new XmlAttributeDeserializer();
-            var output  = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
+        public void Can_Deserialize_Parentless_aka_Inline_List_Items_With_Matching_Class_Name() {
+            var doc    = LoadFromResource("InlineListSample.xml");
+            var xml    = new XmlAttributeDeserializer();
+            var output = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
 
             Assert.IsNotEmpty(output.images);
             Assert.AreEqual(4, output.images.Count);
         }
 
         [Test]
-        public void Can_Deserialize_Parentless_aka_Inline_List_Items_With_Matching_Class_Name_With_Additional_Property()
-        {
-            var doc = LoadFromResource("InlineListSample.xml");
-            var xml     = new XmlAttributeDeserializer();
-            var output  = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
+        public void Can_Deserialize_Parentless_aka_Inline_List_Items_With_Matching_Class_Name_With_Additional_Property() {
+            var doc    = LoadFromResource("InlineListSample.xml");
+            var xml    = new XmlAttributeDeserializer();
+            var output = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
 
             Assert.AreEqual(4, output.Count);
         }
 
         [Test]
-        public void Can_Deserialize_Nested_List_Items_Without_Matching_Class_Name()
-        {
-            var doc = LoadFromResource("NestedListSample.xml");
-            var xml     = new XmlAttributeDeserializer();
-            var output  = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
+        public void Can_Deserialize_Nested_List_Items_Without_Matching_Class_Name() {
+            var doc    = LoadFromResource("NestedListSample.xml");
+            var xml    = new XmlAttributeDeserializer();
+            var output = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
 
             Assert.IsNotEmpty(output.Images);
             Assert.AreEqual(4, output.Images.Count);
         }
 
         [Test]
-        public void Can_Deserialize_Nested_List_Items_With_Matching_Class_Name()
-        {
-            var doc = LoadFromResource("NestedListSample.xml");
-            var xml     = new XmlAttributeDeserializer();
-            var output  = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
+        public void Can_Deserialize_Nested_List_Items_With_Matching_Class_Name() {
+            var doc    = LoadFromResource("NestedListSample.xml");
+            var xml    = new XmlAttributeDeserializer();
+            var output = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
 
             Assert.IsNotEmpty(output.images);
             Assert.AreEqual(4, output.images.Count);
         }
 
         [Test]
-        public void Can_Deserialize_Nested_List_Without_Elements_To_Empty_List()
-        {
+        public void Can_Deserialize_Nested_List_Without_Elements_To_Empty_List() {
             var doc    = CreateXmlWithEmptyNestedList();
             var xml    = new XmlAttributeDeserializer();
             var output = xml.Deserialize<EmptyListSample>(new RestResponse {Content = doc});
@@ -146,8 +131,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Inline_List_Without_Elements_To_Empty_List()
-        {
+        public void Can_Deserialize_Inline_List_Without_Elements_To_Empty_List() {
             var doc    = CreateXmlWithEmptyInlineList();
             var xml    = new XmlAttributeDeserializer();
             var output = xml.Deserialize<EmptyListSample>(new RestResponse {Content = doc});
@@ -159,8 +143,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Empty_Elements_to_Nullable_Values()
-        {
+        public void Can_Deserialize_Empty_Elements_to_Nullable_Values() {
             var doc    = CreateXmlWithNullValues();
             var xml    = new XmlAttributeDeserializer();
             var output = xml.Deserialize<NullableValues>(new RestResponse {Content = doc});
@@ -171,8 +154,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Elements_to_Nullable_Values()
-        {
+        public void Can_Deserialize_Elements_to_Nullable_Values() {
             var culture = CultureInfo.InvariantCulture;
             var doc     = CreateXmlWithoutEmptyValues(culture);
 
@@ -188,8 +170,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_TimeSpan()
-        {
+        public void Can_Deserialize_TimeSpan() {
             var culture = CultureInfo.InvariantCulture;
             var doc     = new XDocument(culture);
 
@@ -223,8 +204,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Custom_Formatted_Date()
-        {
+        public void Can_Deserialize_Custom_Formatted_Date() {
             var          culture = CultureInfo.InvariantCulture;
             const string format  = "dd yyyy MMM, hh:mm ss tt zzz";
             var          date    = new DateTime(2010, 2, 8, 11, 11, 11);
@@ -235,8 +215,7 @@ namespace RestSharp.Tests
 
             doc.Add(root);
 
-            var xml = new XmlAttributeDeserializer
-            {
+            var xml = new XmlAttributeDeserializer {
                 DateFormat = format,
                 Culture    = culture
             };
@@ -247,8 +226,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Nested_Class()
-        {
+        public void Can_Deserialize_Nested_Class() {
             var doc      = CreateElementsXml();
             var response = new RestResponse {Content = doc};
             var d        = new XmlAttributeDeserializer();
@@ -259,8 +237,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Elements_On_Default_Root()
-        {
+        public void Can_Deserialize_Elements_On_Default_Root() {
             var doc      = CreateElementsXml();
             var response = new RestResponse {Content = doc};
             var d        = new XmlAttributeDeserializer();
@@ -286,8 +263,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Attributes_On_Default_Root()
-        {
+        public void Can_Deserialize_Attributes_On_Default_Root() {
             var doc      = CreateAttributesXml();
             var response = new RestResponse {Content = doc};
             var d        = new XmlAttributeDeserializer();
@@ -308,8 +284,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Ignore_Protected_Property_That_Exists_In_Data()
-        {
+        public void Ignore_Protected_Property_That_Exists_In_Data() {
             var doc      = CreateElementsXml();
             var response = new RestResponse {Content = doc};
             var d        = new XmlAttributeDeserializer();
@@ -319,8 +294,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Ignore_ReadOnly_Property_That_Exists_In_Data()
-        {
+        public void Ignore_ReadOnly_Property_That_Exists_In_Data() {
             var doc      = CreateElementsXml();
             var response = new RestResponse {Content = doc};
             var d        = new XmlAttributeDeserializer();
@@ -330,8 +304,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Names_With_Underscores_On_Default_Root()
-        {
+        public void Can_Deserialize_Names_With_Underscores_On_Default_Root() {
             var doc      = CreateUnderscoresXml();
             var response = new RestResponse {Content = doc};
             var d        = new XmlAttributeDeserializer();
@@ -357,8 +330,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Names_With_Dashes_On_Default_Root()
-        {
+        public void Can_Deserialize_Names_With_Dashes_On_Default_Root() {
             var doc      = CreateDashesXml();
             var response = new RestResponse {Content = doc};
             var d        = new XmlAttributeDeserializer();
@@ -384,8 +356,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Names_With_Underscores_Without_Matching_Case_On_Default_Root()
-        {
+        public void Can_Deserialize_Names_With_Underscores_Without_Matching_Case_On_Default_Root() {
             var doc      = CreateLowercaseUnderscoresXml();
             var response = new RestResponse {Content = doc};
             var d        = new XmlAttributeDeserializer();
@@ -411,8 +382,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Lower_Cased_Root_Elements_With_Dashes()
-        {
+        public void Can_Deserialize_Lower_Cased_Root_Elements_With_Dashes() {
             var doc      = CreateDashesXml();
             var response = new RestResponse {Content = doc};
             var d        = new XmlAttributeDeserializer();
@@ -438,8 +408,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Root_Elements_Without_Matching_Case_And_Dashes()
-        {
+        public void Can_Deserialize_Root_Elements_Without_Matching_Case_And_Dashes() {
             var doc      = CreateLowerCasedRootElementWithDashesXml();
             var response = new RestResponse {Content = doc};
             var d        = new XmlAttributeDeserializer();
@@ -451,9 +420,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Eventful_Xml()
-        {
-            var doc  = LoadFromResource("eventful.xml");
+        public void Can_Deserialize_Eventful_Xml() {
+            var doc      = LoadFromResource("eventful.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlAttributeDeserializer();
             var output   = d.Deserialize<VenueSearch>(response);
@@ -466,9 +434,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Lastfm_Xml()
-        {
-            var doc  = LoadFromResource("Lastfm.xml");
+        public void Can_Deserialize_Lastfm_Xml() {
+            var doc      = LoadFromResource("Lastfm.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlAttributeDeserializer();
             var output   = d.Deserialize<Event>(response);
@@ -482,9 +449,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Google_Weather_Xml()
-        {
-            var doc  = LoadFromResource("GoogleWeather.xml");
+        public void Can_Deserialize_Google_Weather_Xml() {
+            var doc      = LoadFromResource("GoogleWeather.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlAttributeDeserializer();
             var output   = d.Deserialize<xml_api_reply>(response);
@@ -495,9 +461,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Google_Weather_Xml_WithDeserializeAs()
-        {
-            var doc  = LoadFromResource("GoogleWeather.xml");
+        public void Can_Deserialize_Google_Weather_Xml_WithDeserializeAs() {
+            var doc      = LoadFromResource("GoogleWeather.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlAttributeDeserializer();
             var output   = d.Deserialize<GoogleWeatherApi>(response);
@@ -508,9 +473,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Boolean_From_Number()
-        {
-            var doc  = LoadFromResource("boolean_from_number.xml");
+        public void Can_Deserialize_Boolean_From_Number() {
+            var doc      = LoadFromResource("boolean_from_number.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlAttributeDeserializer();
             var output   = d.Deserialize<BooleanTest>(response);
@@ -519,9 +483,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Boolean_From_String()
-        {
-            var doc  = LoadFromResource("boolean_from_string.xml");
+        public void Can_Deserialize_Boolean_From_String() {
+            var doc      = LoadFromResource("boolean_from_string.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlAttributeDeserializer();
             var output   = d.Deserialize<BooleanTest>(response);
@@ -530,8 +493,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Empty_Elements_With_Attributes_to_Nullable_Values()
-        {
+        public void Can_Deserialize_Empty_Elements_With_Attributes_to_Nullable_Values() {
             var doc    = CreateXmlWithAttributesAndNullValues();
             var xml    = new XmlAttributeDeserializer();
             var output = xml.Deserialize<NullableValues>(new RestResponse {Content = doc});
@@ -542,8 +504,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_Mixture_Of_Empty_Elements_With_Attributes_And_Populated_Elements()
-        {
+        public void Can_Deserialize_Mixture_Of_Empty_Elements_With_Attributes_And_Populated_Elements() {
             var doc    = CreateXmlWithAttributesAndNullValuesAndPopulatedValues();
             var xml    = new XmlAttributeDeserializer();
             var output = xml.Deserialize<NullableValues>(new RestResponse {Content = doc});
@@ -554,8 +515,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Deserialize_DateTimeOffset()
-        {
+        public void Can_Deserialize_DateTimeOffset() {
             var culture = CultureInfo.InvariantCulture;
             var doc     = new XDocument(culture);
 
@@ -583,8 +543,7 @@ namespace RestSharp.Tests
             Assert.AreEqual(nullableDateTimeOffsetWithValue, payload.NullableDateTimeOffsetWithValue);
         }
 
-        static string CreateUnderscoresXml()
-        {
+        static string CreateUnderscoresXml() {
             var doc  = new XDocument();
             var root = new XElement("Person");
 
@@ -633,8 +592,7 @@ namespace RestSharp.Tests
             return doc.ToString();
         }
 
-        static string CreateLowercaseUnderscoresXml()
-        {
+        static string CreateLowercaseUnderscoresXml() {
             var doc  = new XDocument();
             var root = new XElement("Person");
 
@@ -683,8 +641,7 @@ namespace RestSharp.Tests
             return doc.ToString();
         }
 
-        static string CreateDashesXml()
-        {
+        static string CreateDashesXml() {
             var doc  = new XDocument();
             var root = new XElement("Person");
 
@@ -733,8 +690,7 @@ namespace RestSharp.Tests
             return doc.ToString();
         }
 
-        static string CreateLowerCasedRootElementWithDashesXml()
-        {
+        static string CreateLowerCasedRootElementWithDashesXml() {
             var doc = new XDocument();
 
             var root = new XElement(
@@ -750,8 +706,7 @@ namespace RestSharp.Tests
             return doc.ToString();
         }
 
-        static string CreateElementsXml()
-        {
+        static string CreateElementsXml() {
             var doc  = new XDocument();
             var root = new XElement("Person");
 
@@ -803,8 +758,7 @@ namespace RestSharp.Tests
             return doc.ToString();
         }
 
-        static string CreateAttributesXml()
-        {
+        static string CreateAttributesXml() {
             var doc  = new XDocument();
             var root = new XElement("Person");
 
@@ -833,8 +787,7 @@ namespace RestSharp.Tests
             return doc.ToString();
         }
 
-        static string CreateXmlWithNullValues()
-        {
+        static string CreateXmlWithNullValues() {
             var doc  = new XDocument();
             var root = new XElement("NullableValues");
 
@@ -849,8 +802,7 @@ namespace RestSharp.Tests
             return doc.ToString();
         }
 
-        static string CreateXmlWithoutEmptyValues(CultureInfo culture)
-        {
+        static string CreateXmlWithoutEmptyValues(CultureInfo culture) {
             var doc  = new XDocument();
             var root = new XElement("NullableValues");
 
@@ -865,8 +817,7 @@ namespace RestSharp.Tests
             return doc.ToString();
         }
 
-        static string CreateXmlWithEmptyNestedList()
-        {
+        static string CreateXmlWithEmptyNestedList() {
             var doc  = new XDocument();
             var root = new XElement("EmptyListSample");
 
@@ -876,8 +827,7 @@ namespace RestSharp.Tests
             return doc.ToString();
         }
 
-        static string CreateXmlWithEmptyInlineList()
-        {
+        static string CreateXmlWithEmptyInlineList() {
             var doc  = new XDocument();
             var root = new XElement("EmptyListSample");
 
@@ -886,8 +836,7 @@ namespace RestSharp.Tests
             return doc.ToString();
         }
 
-        static string CreateXmlWithAttributesAndNullValues()
-        {
+        static string CreateXmlWithAttributesAndNullValues() {
             var doc       = new XDocument();
             var root      = new XElement("NullableValues");
             var idElement = new XElement("Id", null);
@@ -905,8 +854,7 @@ namespace RestSharp.Tests
             return doc.ToString();
         }
 
-        static string CreateXmlWithAttributesAndNullValuesAndPopulatedValues()
-        {
+        static string CreateXmlWithAttributesAndNullValuesAndPopulatedValues() {
             var doc       = new XDocument();
             var root      = new XElement("NullableValues");
             var idElement = new XElement("Id", null);

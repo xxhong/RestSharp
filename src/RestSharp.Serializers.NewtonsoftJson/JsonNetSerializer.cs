@@ -1,13 +1,28 @@
+//  Copyright © 2009-2020 John Sheehan, Andrew Young, Alexey Zimarev and RestSharp community
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
+
 using System;
 using System.IO;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RestSharp.Serialization;
 
-namespace RestSharp.Serializers.NewtonsoftJson
-{
-    public class JsonNetSerializer : IRestSerializer
-    {
+namespace RestSharp.Serializers.NewtonsoftJson {
+    [PublicAPI]
+    public class JsonNetSerializer : IRestSerializer {
         /// <summary>
         /// Default serialization settings:
         /// - Camel-case contract resolver
@@ -16,8 +31,7 @@ namespace RestSharp.Serializers.NewtonsoftJson
         /// - Non-indented formatting
         /// - Allow using non-public constructors
         /// </summary>
-        public static readonly JsonSerializerSettings DefaultSettings = new JsonSerializerSettings
-        {
+        public static readonly JsonSerializerSettings DefaultSettings = new() {
             ContractResolver     = new CamelCasePropertyNamesContractResolver(),
             DefaultValueHandling = DefaultValueHandling.Include,
             TypeNameHandling     = TypeNameHandling.None,
@@ -41,8 +55,7 @@ namespace RestSharp.Serializers.NewtonsoftJson
         /// <param name="settings">Json.Net serializer settings</param>
         public JsonNetSerializer(JsonSerializerSettings settings) => _serializer = JsonSerializer.Create(settings);
 
-        public string Serialize(object obj)
-        {
+        public string Serialize(object obj) {
             using var writerBuffer = tWriterBuffer ??= new WriterBuffer(_serializer);
 
             _serializer.Serialize(writerBuffer.GetJsonTextWriter(), obj, obj.GetType());
@@ -52,15 +65,13 @@ namespace RestSharp.Serializers.NewtonsoftJson
 
         public string Serialize(Parameter bodyParameter) => Serialize(bodyParameter.Value);
 
-        public T Deserialize<T>(IRestResponse response)
-        {
+        public T Deserialize<T>(IRestResponse response) {
             using var reader = new JsonTextReader(new StringReader(response.Content)) {CloseInput = true};
 
             return _serializer.Deserialize<T>(reader);
         }
 
-        public string[] SupportedContentTypes { get; } =
-        {
+        public string[] SupportedContentTypes { get; } = {
             "application/json", "text/json", "text/x-json", "text/javascript", "*+json"
         };
 

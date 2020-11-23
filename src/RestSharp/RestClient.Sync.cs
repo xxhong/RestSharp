@@ -15,16 +15,14 @@
 using System;
 using RestSharp.Validation;
 
-namespace RestSharp
-{
-    public partial class RestClient
-    {
+namespace RestSharp {
+    public partial class RestClient {
         /// <inheritdoc />
-        public byte[] DownloadData(IRestRequest request) => DownloadData(request, false);
+        public byte[] DownloadData(IRestRequest request)
+            => DownloadData(request, false);
 
         /// <inheritdoc />
-        public byte[] DownloadData(IRestRequest request, bool throwOnError)
-        {
+        public byte[] DownloadData(IRestRequest request, bool throwOnError) {
             var response = Execute(request);
 
             return response.ResponseStatus == ResponseStatus.Error && throwOnError
@@ -33,22 +31,19 @@ namespace RestSharp
         }
 
         /// <inheritdoc />
-        public virtual IRestResponse Execute(IRestRequest request, Method httpMethod)
-        {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+        public virtual IRestResponse Execute(IRestRequest request, Method httpMethod) {
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             request.Method = httpMethod;
+
             return Execute(request);
         }
 
         /// <inheritdoc />
-        public virtual IRestResponse Execute(IRestRequest request)
-        {
+        public virtual IRestResponse Execute(IRestRequest request) {
             var method = Enum.GetName(typeof(Method), request.Method);
 
-            return request.Method switch
-            {
+            return request.Method switch {
                 Method.COPY  => Execute(request, method, DoExecuteAsPost),
                 Method.POST  => Execute(request, method, DoExecuteAsPost),
                 Method.PUT   => Execute(request, method, DoExecuteAsPost),
@@ -59,22 +54,22 @@ namespace RestSharp
         }
 
         /// <inheritdoc />
-        public IRestResponse ExecuteAsGet(IRestRequest request, string httpMethod) => Execute(request, httpMethod, DoExecuteAsGet);
+        public IRestResponse ExecuteAsGet(IRestRequest request, string httpMethod)
+            => Execute(request, httpMethod, DoExecuteAsGet);
 
         /// <inheritdoc />
-        public IRestResponse ExecuteAsPost(IRestRequest request, string httpMethod)
-        {
+        public IRestResponse ExecuteAsPost(IRestRequest request, string httpMethod) {
             request.Method = Method.POST; // Required by RestClient.BuildUri... 
 
             return Execute(request, httpMethod, DoExecuteAsPost);
         }
 
         /// <inheritdoc />
-        public virtual IRestResponse<T> Execute<T>(IRestRequest request, Method httpMethod)
-        {
+        public virtual IRestResponse<T> Execute<T>(IRestRequest request, Method httpMethod) {
             Ensure.NotNull(request, nameof(request));
 
             request.Method = httpMethod;
+
             return Execute<T>(request);
         }
 
@@ -94,26 +89,23 @@ namespace RestSharp
             IRestRequest request,
             string httpMethod,
             Func<IHttp, string, HttpResponse> getResponse
-        )
-        {
+        ) {
             request.SerializeRequestBody(Serializers, request.XmlSerializer, request.JsonSerializer);
-            
+
             AuthenticateIfNeeded(request);
 
             IRestResponse response = new RestResponse();
 
-            try
-            {
+            try {
                 var http = ConfigureHttp(request);
-                
+
                 request.OnBeforeRequest?.Invoke(http);
 
                 response = RestResponse.FromHttpResponse(getResponse(http, httpMethod), request);
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 if (ThrowOnAnyError) throw;
-                
+
                 response.ResponseStatus = ResponseStatus.Error;
                 response.ErrorMessage   = ex.Message;
                 response.ErrorException = ex;
@@ -125,8 +117,10 @@ namespace RestSharp
             return response;
         }
 
-        static HttpResponse DoExecuteAsGet(IHttp http, string method) => http.AsGet(method);
+        static HttpResponse DoExecuteAsGet(IHttp http, string method)
+            => http.AsGet(method);
 
-        static HttpResponse DoExecuteAsPost(IHttp http, string method) => http.AsPost(method);
+        static HttpResponse DoExecuteAsPost(IHttp http, string method)
+            => http.AsPost(method);
     }
 }

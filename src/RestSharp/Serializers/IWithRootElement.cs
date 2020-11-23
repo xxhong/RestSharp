@@ -12,10 +12,10 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License. 
 
-namespace RestSharp.Serialization
-{
-    public interface IWithRootElement
-    {
+// ReSharper disable once CheckNamespace
+
+namespace RestSharp.Serialization {
+    public interface IWithRootElement {
         string RootElement { get; set; }
     }
 }

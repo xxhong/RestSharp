@@ -15,10 +15,24 @@
 using System;
 
 namespace RestSharp {
+    /// <summary>
+    /// Request body
+    /// </summary>
     public class RequestBody {
+        /// <summary>
+        /// Body content type
+        /// </summary>
         public string ContentType { get; }
+
+        /// <summary>
+        /// Body parameter name
+        /// </summary>
         public string Name { get; }
-        public object Value { get; }
+
+        /// <summary>
+        /// Body value
+        /// </summary>
+        public object? Value { get; }
 
         [Obsolete("The RestBody constructor will be internal in future versions")]
         public RequestBody(string contentType, string name, object value) {

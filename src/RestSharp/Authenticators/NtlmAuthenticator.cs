@@ -15,13 +15,11 @@
 using System;
 using System.Net;
 
-namespace RestSharp.Authenticators
-{
+namespace RestSharp.Authenticators {
     /// <summary>
     /// Tries to Authenticate with the credentials of the currently logged in user, or impersonate a user
     /// </summary>
-    public class NtlmAuthenticator : IAuthenticator
-    {
+    public class NtlmAuthenticator : IAuthenticator {
         readonly ICredentials _credentials;
 
         /// <summary>
@@ -41,8 +39,11 @@ namespace RestSharp.Authenticators
         /// Authenticate by impersonation, using an existing <c>ICredentials</c> instance
         /// </summary>
         /// <param name="credentials"></param>
-        public NtlmAuthenticator(ICredentials credentials) => this._credentials = credentials ?? throw new ArgumentNullException(nameof(credentials));
+        public NtlmAuthenticator(ICredentials credentials)
+            => _credentials = credentials ?? throw new ArgumentNullException(nameof(credentials));
 
-        public void Authenticate(IRestClient client, IRestRequest request) => request.Credentials = _credentials;
+        /// <inheritdoc />
+        public void Authenticate(IRestClient client, IRestRequest request)
+            => request.Credentials = _credentials;
     }
 }

@@ -22,11 +22,9 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using JetBrains.Annotations;
 
-namespace RestSharp
-{
+namespace RestSharp {
     [PublicAPI]
-    public interface IHttp
-    {
+    public interface IHttp {
         /// <summary>
         /// The delegate to use to write the response instead of reading into RawBytes
         /// </summary>

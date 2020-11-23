@@ -14,8 +14,16 @@
 
 namespace RestSharp.Authenticators
 {
+    /// <summary>
+    /// Authenticator interface
+    /// </summary>
     public interface IAuthenticator
     {
+        /// <summary>
+        /// This method will be called when making the call to authenticate it
+        /// </summary>
+        /// <param name="client">The client instance</param>
+        /// <param name="request">Current request</param>
         void Authenticate(IRestClient client, IRestRequest request);
     }
 }

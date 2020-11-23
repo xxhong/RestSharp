@@ -19,8 +19,7 @@
 using System;
 using System.Text;
 
-namespace RestSharp.Authenticators
-{
+namespace RestSharp.Authenticators {
     /// <summary>
     /// Allows "basic access authentication" for HTTP requests.
     /// </summary>
@@ -28,19 +27,33 @@ namespace RestSharp.Authenticators
     /// Encoding can be specified depending on what your server expect (see https://stackoverflow.com/a/7243567).
     /// UTF-8 is used by default but some servers might expect ISO-8859-1 encoding.
     /// </remarks>
-    public class HttpBasicAuthenticator : AuthenticatorBase
-    {
+    public class HttpBasicAuthenticator : AuthenticatorBase {
+        /// <summary>
+        /// Creates a new basic authenticator instance
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         public HttpBasicAuthenticator(string username, string password)
             : this(username, password, Encoding.UTF8) { }
 
+        /// <summary>
+        /// Creates a new basic authenticator instance
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="encoding"></param>
+        /// <remarks>
+        /// Encoding can be specified depending on what your server expect (see https://stackoverflow.com/a/7243567).
+        /// UTF-8 is used by default but some servers might expect ISO-8859-1 encoding.
+        /// </remarks>
         public HttpBasicAuthenticator(string username, string password, Encoding encoding)
             : base(GetHeader(username, password, encoding)) { }
 
         static string GetHeader(string username, string password, Encoding encoding)
             => Convert.ToBase64String(encoding.GetBytes($"{username}:{password}"));
 
-        // return ;
+        /// <inheritdoc />
         protected override Parameter GetAuthenticationParameter(string accessToken)
-            => new Parameter("Authorization", $"Basic {accessToken}", ParameterType.HttpHeader);
+            => new("Authorization", $"Basic {accessToken}", ParameterType.HttpHeader);
     }
 }

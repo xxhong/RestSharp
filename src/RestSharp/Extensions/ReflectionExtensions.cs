@@ -17,13 +17,11 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace RestSharp.Extensions
-{
+namespace RestSharp.Extensions {
     /// <summary>
     /// Reflection extensions
     /// </summary>
-    public static class ReflectionExtensions
-    {
+    public static class ReflectionExtensions {
         /// <summary>
         /// Retrieve an attribute from a member (property)
         /// </summary>
@@ -46,10 +44,8 @@ namespace RestSharp.Extensions
         /// <param name="toCheck"></param>
         /// <param name="generic"></param>
         /// <returns></returns>
-        public static bool IsSubclassOfRawGeneric(this Type toCheck, Type generic)
-        {
-            while (toCheck != null && toCheck != typeof(object))
-            {
+        public static bool IsSubclassOfRawGeneric(this Type toCheck, Type generic) {
+            while (toCheck != null && toCheck != typeof(object)) {
                 var cur = toCheck.GetTypeInfo().IsGenericType
                     ? toCheck.GetGenericTypeDefinition()
                     : toCheck;
@@ -72,8 +68,7 @@ namespace RestSharp.Extensions
         /// <param name="value">Value for which to search</param>
         /// <param name="culture">The culture used to calculate the name variants</param>
         /// <returns></returns>
-        public static object FindEnumValue(this Type type, string value, CultureInfo culture)
-        {
+        public static object FindEnumValue(this Type type, string value, CultureInfo culture) {
             var caseInsensitiveComparer = StringComparer.Create(culture, true);
 
             var ret = Enum.GetValues(type)

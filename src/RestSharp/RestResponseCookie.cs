@@ -14,11 +14,9 @@
 
 using System;
 
-namespace RestSharp
-{
+namespace RestSharp {
     [Obsolete("We will use HttpCookie in the response as well in the next major version")]
-    public class RestResponseCookie
-    {
+    public class RestResponseCookie {
         /// <summary>
         /// Comment of the cookie
         /// </summary>
@@ -92,8 +90,7 @@ namespace RestSharp
         public HttpCookie HttpCookie { get; private set; }
 
         internal static RestResponseCookie FromHttpCookie(HttpCookie cookie)
-            => new RestResponseCookie
-            {
+            => new() {
                 Comment    = cookie.Comment,
                 CommentUri = cookie.CommentUri,
                 Discard    = cookie.Discard,

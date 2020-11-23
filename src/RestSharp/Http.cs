@@ -27,13 +27,11 @@ using RestSharp.Extensions;
 
 #pragma warning disable 618
 
-namespace RestSharp
-{
+namespace RestSharp {
     /// <summary>
     /// HttpWebRequest wrapper
     /// </summary>
-    public partial class Http : IHttp
-    {
+    public partial class Http : IHttp {
         const string LineBreak = "\r\n";
 
         public string FormBoundary { get; } = "---------" + Guid.NewGuid().ToString().ToUpperInvariant();
@@ -43,16 +41,14 @@ namespace RestSharp
 
         readonly IDictionary<string, Action<HttpWebRequest, string>> _restrictedHeaderActions;
 
-        public Http()
-        {
+        public Http() {
             _restrictedHeaderActions =
                 new Dictionary<string, Action<HttpWebRequest, string>>(StringComparer.OrdinalIgnoreCase);
 
             AddSharedHeaderActions();
             AddSyncHeaderActions();
 
-            void AddSyncHeaderActions()
-            {
+            void AddSyncHeaderActions() {
                 _restrictedHeaderActions.Add("Connection", (r, v) => { r.KeepAlive = v.ToLowerInvariant().Contains("keep-alive"); });
                 _restrictedHeaderActions.Add("Content-Length", (r, v) => r.ContentLength = Convert.ToInt64(v));
                 _restrictedHeaderActions.Add("Expect", (r, v) => r.Expect                = v);
@@ -65,8 +61,7 @@ namespace RestSharp
 
                 _restrictedHeaderActions.Add(
                     "Transfer-Encoding",
-                    (r, v) =>
-                    {
+                    (r, v) => {
                         r.TransferEncoding = v;
                         r.SendChunked      = true;
                     }
@@ -74,15 +69,13 @@ namespace RestSharp
                 _restrictedHeaderActions.Add("User-Agent", (r, v) => r.UserAgent = v);
             }
 
-            void AddSharedHeaderActions()
-            {
+            void AddSharedHeaderActions() {
                 _restrictedHeaderActions.Add("Accept", (r, v) => r.Accept            = v);
                 _restrictedHeaderActions.Add("Content-Type", (r, v) => r.ContentType = v);
 
                 _restrictedHeaderActions.Add(
                     "Date",
-                    (r, v) =>
-                    {
+                    (r, v) => {
                         if (DateTime.TryParse(v, out var parsed)) r.Date = parsed;
                     }
                 );
@@ -91,8 +84,7 @@ namespace RestSharp
 
                 _restrictedHeaderActions.Add("Range", AddRange);
 
-                static void AddRange(HttpWebRequest r, string range)
-                {
+                static void AddRange(HttpWebRequest r, string range) {
                     var m = AddRangeRegex.Match(range);
 
                     if (!m.Success) return;
@@ -152,10 +144,10 @@ namespace RestSharp
         public CookieContainer? CookieContainer { get; set; }
 
         /// <inheritdoc />
-        public Action<Stream, IHttpResponse> AdvancedResponseWriter { get; set; }
+        public Action<Stream, IHttpResponse>? AdvancedResponseWriter { get; set; }
 
         /// <inheritdoc />
-        public Action<Stream> ResponseWriter { get; set; }
+        public Action<Stream>? ResponseWriter { get; set; }
 
         /// <inheritdoc />
         public IList<HttpFile> Files { get; internal set; }
@@ -197,7 +189,7 @@ namespace RestSharp
         public string RequestContentType { get; set; }
 
         /// <inheritdoc />
-        public byte[] RequestBodyBytes { get; set; }
+        public byte[]? RequestBodyBytes { get; set; }
 
         /// <inheritdoc />
         public Uri Url { get; set; }
@@ -244,8 +236,7 @@ namespace RestSharp
                 $" filename=\"{file.FileName}\"{LineBreak}"                                        +
                 $"Content-Type: {file.ContentType ?? "application/octet-stream"}{LineBreak}{LineBreak}";
 
-        string GetMultipartFormData(HttpParameter param)
-        {
+        string GetMultipartFormData(HttpParameter param) {
             var format = param.Name == RequestContentType
                 ? "--{0}{3}Content-Type: {4}{3}Content-Disposition: form-data; name=\"{1}\"{3}{3}{2}{3}"
                 : "--{0}{3}Content-Disposition: form-data; name=\"{1}\"{3}{3}{2}{3}";
@@ -255,27 +246,21 @@ namespace RestSharp
 
         string GetMultipartFooter() => $"--{FormBoundary}--{LineBreak}";
 
-        void PreparePostBody(WebRequest webRequest)
-        {
+        void PreparePostBody(WebRequest webRequest) {
             var needsContentType = string.IsNullOrEmpty(webRequest.ContentType);
 
-            if (HasFiles || AlwaysMultipartFormData)
-            {
-                if (needsContentType)
-                {
+            if (HasFiles || AlwaysMultipartFormData) {
+                if (needsContentType) {
                     webRequest.ContentType = GetMultipartFormContentType();
                 }
-                else if (!webRequest.ContentType.Contains("boundary"))
-                {
+                else if (!webRequest.ContentType.Contains("boundary")) {
                     webRequest.ContentType = webRequest.ContentType + "; boundary=" + FormBoundary;
                 }
             }
-            else if (HasBody)
-            {
+            else if (HasBody) {
                 if (needsContentType) webRequest.ContentType = RequestContentType;
             }
-            else if (HasParameters)
-            {
+            else if (HasParameters) {
                 if (needsContentType) webRequest.ContentType = "application/x-www-form-urlencoded";
                 RequestBody = EncodeParameters();
             }
@@ -285,12 +270,10 @@ namespace RestSharp
             string GetMultipartFormContentType() => $"multipart/form-data; boundary={FormBoundary}";
         }
 
-        void WriteMultipartFormData(Stream requestStream)
-        {
+        void WriteMultipartFormData(Stream requestStream) {
             foreach (var param in Parameters) requestStream.WriteString(GetMultipartFormData(param), Encoding);
 
-            foreach (var file in Files)
-            {
+            foreach (var file in Files) {
                 // Add just the first part of this param, since we will write the file data directly to the Stream
                 requestStream.WriteString(GetMultipartFileHeader(file), Encoding);
 
@@ -302,10 +285,8 @@ namespace RestSharp
             requestStream.WriteString(GetMultipartFooter(), Encoding);
         }
 
-        HttpResponse ExtractResponseData(HttpWebResponse webResponse)
-        {
-            var response = new HttpResponse
-            {
+        HttpResponse ExtractResponseData(HttpWebResponse webResponse) {
+            var response = new HttpResponse {
                 ContentEncoding   = webResponse.ContentEncoding,
                 Server            = webResponse.Server,
                 ProtocolVersion   = webResponse.ProtocolVersion,
@@ -318,11 +299,9 @@ namespace RestSharp
             };
 
             if (webResponse.Cookies != null)
-                foreach (Cookie cookie in webResponse.Cookies)
-                {
+                foreach (Cookie cookie in webResponse.Cookies) {
                     response.Cookies.Add(
-                        new HttpCookie
-                        {
+                        new HttpCookie {
                             Comment    = cookie.Comment,
                             CommentUri = cookie.CommentUri,
                             Discard    = cookie.Discard,
@@ -346,20 +325,16 @@ namespace RestSharp
                 .ToList();
 
             var webResponseStream = webResponse.GetResponseStream();
-            if (webResponseStream != null)
-                ProcessResponseStream();
+            if (webResponseStream != null) ProcessResponseStream();
 
             webResponse.Close();
             return response;
 
-            void ProcessResponseStream()
-            {
-                if (AdvancedResponseWriter != null)
-                {
+            void ProcessResponseStream() {
+                if (AdvancedResponseWriter != null) {
                     AdvancedResponseWriter(webResponseStream, response);
                 }
-                else
-                {
+                else {
                     if (ResponseWriter == null)
                         response.RawBytes = webResponseStream.ReadAsBytes();
                     else

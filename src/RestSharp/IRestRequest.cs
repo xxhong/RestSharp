@@ -24,11 +24,9 @@ using JetBrains.Annotations;
 using RestSharp.Serialization.Xml;
 using RestSharp.Serializers;
 
-namespace RestSharp
-{
+namespace RestSharp {
     [PublicAPI]
-    public interface IRestRequest
-    {
+    public interface IRestRequest {
         /// <summary>
         /// Always send a multipart/form-data request - even when no Files are present.
         /// </summary>
@@ -151,12 +149,12 @@ namespace RestSharp
         /// When supplied, the function will be called before calling the deserializer
         /// </summary>
         Action<IRestResponse>? OnBeforeDeserialization { get; set; }
-        
+
         /// <summary>
         /// When supplied, the function will be called before making a request
         /// </summary>
         Action<IHttp>? OnBeforeRequest { get; set; }
-        
+
         /// <summary>
         /// Serialized request body to be accessed in authenticators
         /// </summary>
@@ -324,7 +322,7 @@ namespace RestSharp
         /// <param name="parameter">Parameter to add</param>
         /// <returns></returns>
         IRestRequest AddOrUpdateParameter(Parameter parameter);
-        
+
         /// <summary>
         /// Add or update parameters to the request
         /// </summary>
@@ -376,7 +374,7 @@ namespace RestSharp
         /// <param name="value">Value of the header to add</param>
         /// <returns></returns>
         IRestRequest AddHeader(string name, string value);
-        
+
         /// <summary>
         /// Uses AddHeader(name, value) in a convenient way to pass
         /// in multiple headers at once.

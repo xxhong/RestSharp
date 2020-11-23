@@ -12,8 +12,15 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License. 
 
+using JetBrains.Annotations;
+
 namespace RestSharp.Authenticators
 {
+    /// <summary>
+    /// Simplistic authenticator, which sends both
+    /// username and password as request parameters.
+    /// </summary>
+    [PublicAPI]
     public class SimpleAuthenticator : IAuthenticator
     {
         readonly string _password;
@@ -21,6 +28,13 @@ namespace RestSharp.Authenticators
         readonly string _username;
         readonly string _usernameKey;
 
+        /// <summary>
+        /// Specify names and values for the request parameters
+        /// </summary>
+        /// <param name="usernameKey">Parameter name for username</param>
+        /// <param name="username">Username</param>
+        /// <param name="passwordKey">Parameter name for password</param>
+        /// <param name="password">Password</param>
         public SimpleAuthenticator(string usernameKey, string username, string passwordKey, string password)
         {
             _usernameKey = usernameKey;
@@ -29,6 +43,7 @@ namespace RestSharp.Authenticators
             _password    = password;
         }
 
+        /// <inheritdoc />
         public void Authenticate(IRestClient client, IRestRequest request)
             => request
                 .AddParameter(_usernameKey, _username)

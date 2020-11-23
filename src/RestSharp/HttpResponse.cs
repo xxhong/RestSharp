@@ -18,16 +18,13 @@ using System.Net;
 using JetBrains.Annotations;
 using RestSharp.Extensions;
 
-namespace RestSharp
-{
+namespace RestSharp {
     /// <inheritdoc />
     [PublicAPI]
-    public class HttpResponse : IHttpResponse
-    {
-        string _content;
+    public class HttpResponse : IHttpResponse {
+        string? _content;
 
-        public HttpResponse()
-        {
+        public HttpResponse() {
             ResponseStatus = ResponseStatus.None;
             Headers        = new List<HttpHeader>();
             Cookies        = new List<HttpCookie>();

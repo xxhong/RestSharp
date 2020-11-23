@@ -16,10 +16,8 @@ using System;
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace RestSharp.Extensions
-{
-    public static class RSACryptoServiceProviderExtensions
-    {
+namespace RestSharp.Extensions {
+    public static class RSACryptoServiceProviderExtensions {
         /// <summary>
         /// Imports the specified XML String into the crypto service provider
         /// </summary>
@@ -28,8 +26,7 @@ namespace RestSharp.Extensions
         /// to do it ourselves.
         /// Source: https://gist.github.com/Jargon64/5b172c452827e15b21882f1d76a94be4/
         /// </remarks>
-        public static void FromXmlString2(this RSACryptoServiceProvider rsa, string xmlString)
-        {
+        public static void FromXmlString2(this RSACryptoServiceProvider rsa, string xmlString) {
 #if !NETSTANDARD2_0
             rsa.FromXmlString(xmlString);
 #else
@@ -37,8 +34,7 @@ namespace RestSharp.Extensions
 #endif
         }
 
-        internal static void FromXmlStringImpl(RSACryptoServiceProvider rsa, string xmlString)
-        {
+        internal static void FromXmlStringImpl(RSACryptoServiceProvider rsa, string xmlString) {
             var parameters = new RSAParameters();
 
             var xmlDoc = new XmlDocument();
@@ -46,9 +42,8 @@ namespace RestSharp.Extensions
 
             if (!xmlDoc.DocumentElement.Name.Equals("RSAKeyValue")) throw new InvalidOperationException("Invalid XML RSA key.");
 
-            foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes)
-                switch (node.Name)
-                {
+            foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes) {
+                switch (node.Name) {
                     case "Modulus":
                         parameters.Modulus = Convert.FromBase64String(node.InnerText);
                         break;
@@ -73,9 +68,9 @@ namespace RestSharp.Extensions
                     case "D":
                         parameters.D = Convert.FromBase64String(node.InnerText);
                         break;
-                    default:
-                        throw new InvalidOperationException("Unknown node name: " + node.Name);
+                    default: throw new InvalidOperationException("Unknown node name: " + node.Name);
                 }
+            }
 
             rsa.ImportParameters(parameters);
         }

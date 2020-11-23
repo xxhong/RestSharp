@@ -12,16 +12,32 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License. 
 
-namespace RestSharp.Authenticators
-{
-    public abstract class AuthenticatorBase : IAuthenticator
-    {
-        protected AuthenticatorBase(string token) => Token = token;
+namespace RestSharp.Authenticators {
+    /// <summary>
+    /// 
+    /// </summary>
+    public abstract class AuthenticatorBase : IAuthenticator {
+        /// <summary>
+        /// The default constructor that needs a token
+        /// </summary>
+        /// <param name="token"></param>
+        protected AuthenticatorBase(string token)
+            => Token = token;
 
+        /// <summary>
+        /// Generic token, used differently for each authenticator
+        /// </summary>
         protected string Token { get; }
 
+        /// <summary>
+        /// Get the authentication header parameter for the request 
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <returns></returns>
         protected abstract Parameter GetAuthenticationParameter(string accessToken);
 
-        public void Authenticate(IRestClient client, IRestRequest request) => request.AddOrUpdateParameter(GetAuthenticationParameter(Token));
+        /// <inheritdoc />
+        public void Authenticate(IRestClient client, IRestRequest request)
+            => request.AddOrUpdateParameter(GetAuthenticationParameter(Token));
     }
 }

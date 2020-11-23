@@ -27,7 +27,7 @@ namespace RestSharp
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "()}")]
     public abstract class RestResponseBase
     {
-        string _content;
+        string? _content;
 
         /// <summary>
         /// Default constructor
@@ -127,7 +127,7 @@ namespace RestSharp
         /// <summary>
         /// The exception thrown during the request, if any
         /// </summary>
-        public Exception ErrorException { get; set; }
+        public Exception? ErrorException { get; set; }
 
         /// <summary>
         /// The HTTP protocol version (1.0, 1.1, etc)
@@ -155,8 +155,7 @@ namespace RestSharp
         public T Data { get; set; } = default!;
 
         public static explicit operator RestResponse<T>(RestResponse response)
-            => new RestResponse<T>
-            {
+            => new() {
                 ContentEncoding   = response.ContentEncoding,
                 ContentLength     = response.ContentLength,
                 ContentType       = response.ContentType,

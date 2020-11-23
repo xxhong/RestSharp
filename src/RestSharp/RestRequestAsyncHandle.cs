@@ -14,12 +14,11 @@
 
 using System.Net;
 
-namespace RestSharp
-{
-    public class RestRequestAsyncHandle
-    {
+namespace RestSharp {
+    public class RestRequestAsyncHandle {
         public HttpWebRequest WebRequest;
 
-        public void Abort() => WebRequest?.Abort();
+        public void Abort()
+            => WebRequest?.Abort();
     }
 }

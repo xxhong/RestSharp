@@ -29,14 +29,12 @@ using RestSharp.Serializers;
 
 // ReSharper disable IntroduceOptionalParameters.Global
 
-namespace RestSharp
-{
+namespace RestSharp {
     /// <summary>
     /// Container for data used to make requests
     /// </summary>
     [PublicAPI]
-    public class RestRequest : IRestRequest
-    {
+    public class RestRequest : IRestRequest {
         static readonly Regex PortSplitRegex = new Regex(@":\d+");
 
         readonly IList<DecompressionMethods> _allowedDecompressionMethods;
@@ -48,8 +46,7 @@ namespace RestSharp
         /// <summary>
         /// Default constructor
         /// </summary>
-        public RestRequest()
-        {
+        public RestRequest() {
             RequestFormat                = DataFormat.Xml;
             Method                       = Method.GET;
             Parameters                   = new List<Parameter>();
@@ -57,8 +54,8 @@ namespace RestSharp
             _allowedDecompressionMethods = new List<DecompressionMethods>();
 
             OnBeforeDeserialization = r => { };
-            OnBeforeRequest = h => { };
-	   }
+            OnBeforeRequest         = h => { };
+        }
 
         /// <summary>
         /// Sets Method property to value of method
@@ -72,28 +69,24 @@ namespace RestSharp
 
         public RestRequest(string resource) : this(resource, Method.GET, DataFormat.Xml) { }
 
-        public RestRequest(string resource, Method method, DataFormat dataFormat) : this()
-        {
+        public RestRequest(string resource, Method method, DataFormat dataFormat) : this() {
             Resource      = resource ?? "";
             Method        = method;
             RequestFormat = dataFormat;
 
             var queryStringStart = Resource.IndexOf('?');
 
-            if (queryStringStart >= 0 && Resource.IndexOf('=') > queryStringStart)
-            {
+            if (queryStringStart >= 0 && Resource.IndexOf('=') > queryStringStart) {
                 var queryParams = ParseQuery(Resource.Substring(queryStringStart + 1));
                 Resource = Resource.Substring(0, queryStringStart);
 
-                foreach (var param in queryParams)
-                    AddQueryParameter(param.Name, param.Value, false);
+                foreach (var param in queryParams) AddQueryParameter(param.Name, param.Value, false);
             }
 
             static IEnumerable<NameValuePair> ParseQuery(string query)
-                => query.Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries)
+                => query.Split(new[] {'&'}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(
-                        x =>
-                        {
+                        x => {
                             var position = x.IndexOf('=');
 
                             return position > 0
@@ -107,7 +100,9 @@ namespace RestSharp
             : this(
                 resource.IsAbsoluteUri
                     ? resource.AbsoluteUri
-                    : resource.OriginalString, method, dataFormat
+                    : resource.OriginalString,
+                method,
+                dataFormat
             ) { }
 
         public RestRequest(Uri resource, Method method) : this(resource, method, DataFormat.Xml) { }
@@ -132,11 +127,9 @@ namespace RestSharp
         public RequestBody Body { get; set; }
 
         /// <inheritdoc />
-        public Action<Stream> ResponseWriter
-        {
+        public Action<Stream> ResponseWriter {
             get => _responseWriter;
-            set
-            {
+            set {
                 if (AdvancedResponseWriter != null)
                     throw new ArgumentException(
                         "AdvancedResponseWriter is not null. Only one response writer can be used."
@@ -147,13 +140,10 @@ namespace RestSharp
         }
 
         /// <inheritdoc />
-        public Action<Stream, IHttpResponse> AdvancedResponseWriter
-        {
+        public Action<Stream, IHttpResponse> AdvancedResponseWriter {
             get => _advancedResponseWriter;
-            set
-            {
-                if (ResponseWriter != null)
-                    throw new ArgumentException("ResponseWriter is not null. Only one response writer can be used.");
+            set {
+                if (ResponseWriter != null) throw new ArgumentException("ResponseWriter is not null. Only one response writer can be used.");
 
                 _advancedResponseWriter = value;
             }
@@ -163,29 +153,20 @@ namespace RestSharp
         public bool UseDefaultCredentials { get; set; }
 
         /// <inheritdoc />
-        public IRestRequest AddFile(string name, string path, string contentType = null)
-        {
+        public IRestRequest AddFile(string name, string path, string? contentType = null) {
             var f          = new FileInfo(path);
             var fileLength = f.Length;
 
-            return AddFile(
-                new FileParameter
-                {
-                    Name          = name,
-                    FileName      = Path.GetFileName(path),
-                    ContentLength = fileLength,
-                    Writer = s =>
-                    {
-                        using var file = new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
-                        file.BaseStream.CopyTo(s);
-                    },
-                    ContentType = contentType
-                }
-            );
+            void Writer(Stream s) {
+                using var file = new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
+                file.BaseStream.CopyTo(s);
+            }
+
+            return AddFile(FileParameter.Create(name, Writer, fileLength, Path.GetFileName(path), contentType));
         }
 
         /// <inheritdoc />
-        public IRestRequest AddFile(string name, byte[] bytes, string fileName, string contentType = null)
+        public IRestRequest AddFile(string name, byte[] bytes, string fileName, string? contentType = null)
             => AddFile(FileParameter.Create(name, bytes, fileName, contentType));
 
         /// <inheritdoc />
@@ -194,18 +175,9 @@ namespace RestSharp
             Action<Stream> writer,
             string fileName,
             long contentLength,
-            string contentType = null
+            string? contentType = null
         )
-            => AddFile(
-                new FileParameter
-                {
-                    Name          = name,
-                    Writer        = writer,
-                    FileName      = fileName,
-                    ContentLength = contentLength,
-                    ContentType   = contentType
-                }
-            );
+            => AddFile(FileParameter.Create(name, writer, contentLength, fileName, contentType));
 
         /// <inheritdoc />
         public IRestRequest AddFileBytes(
@@ -213,32 +185,23 @@ namespace RestSharp
             byte[] bytes,
             string filename,
             string contentType = "application/x-gzip"
-        )
-        {
+        ) {
             long length = bytes.Length;
 
-            return AddFile(
-                new FileParameter
-                {
-                    Name          = name,
-                    FileName      = filename,
-                    ContentLength = length,
-                    ContentType   = contentType,
-                    Writer = s =>
-                    {
-                        using var file = new StreamReader(new MemoryStream(bytes));
+            void Writer(Stream s) {
+                using var file = new StreamReader(new MemoryStream(bytes));
+                file.BaseStream.CopyTo(s);
+            }
 
-                        file.BaseStream.CopyTo(s);
-                    }
-                }
+            return AddFile(
+                FileParameter.Create(name, Writer, length, filename, contentType)
             );
         }
 
         /// <inheritdoc />
         [Obsolete("Use AddXmlBody")]
         public IRestRequest AddBody(object obj, string xmlNamespace)
-            => RequestFormat switch
-            {
+            => RequestFormat switch {
                 DataFormat.Json => AddJsonBody(obj),
                 DataFormat.Xml  => AddXmlBody(obj, xmlNamespace),
                 _               => this
@@ -247,24 +210,21 @@ namespace RestSharp
         /// <inheritdoc />
         [Obsolete("Use AddXmlBody or AddJsonBody")]
         public IRestRequest AddBody(object obj)
-            => RequestFormat switch
-            {
+            => RequestFormat switch {
                 DataFormat.Json => AddJsonBody(obj),
                 DataFormat.Xml  => AddXmlBody(obj),
                 _               => this
             };
 
         /// <inheritdoc />
-        public IRestRequest AddJsonBody(object obj)
-        {
+        public IRestRequest AddJsonBody(object obj) {
             RequestFormat = DataFormat.Json;
 
             return AddParameter(new JsonParameter("", obj));
         }
 
         /// <inheritdoc />
-        public IRestRequest AddJsonBody(object obj, string contentType)
-        {
+        public IRestRequest AddJsonBody(object obj, string contentType) {
             RequestFormat = DataFormat.Json;
 
             return AddParameter(new JsonParameter(contentType, obj, contentType));
@@ -274,14 +234,12 @@ namespace RestSharp
         public IRestRequest AddXmlBody(object obj) => AddXmlBody(obj, "");
 
         /// <inheritdoc />
-        public IRestRequest AddXmlBody(object obj, string xmlNamespace)
-        {
+        public IRestRequest AddXmlBody(object obj, string xmlNamespace) {
             RequestFormat = DataFormat.Xml;
 
             if (!string.IsNullOrWhiteSpace(XmlNamespace))
-                xmlNamespace = XmlNamespace;
-            else if (!string.IsNullOrWhiteSpace(XmlSerializer?.Namespace))
-                xmlNamespace = XmlSerializer.Namespace;
+                xmlNamespace                                                            = XmlNamespace;
+            else if (!string.IsNullOrWhiteSpace(XmlSerializer?.Namespace)) xmlNamespace = XmlSerializer.Namespace;
 
             AddParameter(new XmlParameter("", obj, xmlNamespace));
 
@@ -289,31 +247,25 @@ namespace RestSharp
         }
 
         /// <inheritdoc />
-        public IRestRequest AddObject(object obj, params string[] includedProperties)
-        {
+        public IRestRequest AddObject(object obj, params string[] includedProperties) {
             // automatically create parameters from object props
             var type  = obj.GetType();
             var props = type.GetProperties();
 
-            foreach (var prop in props)
-            {
-                if (!IsAllowedProperty(prop.Name))
-                    continue;
+            foreach (var prop in props) {
+                if (!IsAllowedProperty(prop.Name)) continue;
 
                 var val = prop.GetValue(obj, null);
 
-                if (val == null)
-                    continue;
+                if (val == null) continue;
 
                 var propType = prop.PropertyType;
 
-                if (propType.IsArray)
-                {
+                if (propType.IsArray) {
                     var elementType = propType.GetElementType();
                     var array       = (Array) val;
 
-                    if (array.Length > 0 && elementType != null)
-                    {
+                    if (array.Length > 0 && elementType != null) {
                         // convert the array to an array of strings
                         var values = array.Cast<object>().Select(item => item.ToString());
 
@@ -328,8 +280,8 @@ namespace RestSharp
 
             bool IsAllowedProperty(string propertyName)
                 => includedProperties.Length == 0
-                    || includedProperties.Length > 0
-                    && includedProperties.Contains(propertyName);
+                 || includedProperties.Length > 0
+                 && includedProperties.Contains(propertyName);
         }
 
         /// <inheritdoc />
@@ -349,8 +301,7 @@ namespace RestSharp
             => AddParameter(new Parameter(name, value, contentType, type));
 
         /// <inheritdoc />
-        public IRestRequest AddOrUpdateParameter(Parameter parameter)
-        {
+        public IRestRequest AddOrUpdateParameter(Parameter parameter) {
             var p = Parameters
                 .FirstOrDefault(x => x.Name == parameter.Name && x.Type == parameter.Type);
 
@@ -361,10 +312,8 @@ namespace RestSharp
         }
 
         /// <inheritdoc />
-        public IRestRequest AddOrUpdateParameters(IEnumerable<Parameter> parameters)
-        {
-            foreach (var parameter in parameters)
-                AddOrUpdateParameter(parameter);
+        public IRestRequest AddOrUpdateParameters(IEnumerable<Parameter> parameters) {
+            foreach (var parameter in parameters) AddOrUpdateParameter(parameter);
 
             return this;
         }
@@ -382,8 +331,7 @@ namespace RestSharp
             => AddOrUpdateParameter(new Parameter(name, value, contentType, type));
 
         /// <inheritdoc />
-        public IRestRequest AddHeader(string name, string value)
-        {
+        public IRestRequest AddHeader(string name, string value) {
             static bool InvalidHost(string host) => Uri.CheckHostName(PortSplitRegex.Split(host)[0]) == UriHostNameType.Unknown;
 
             if (name == "Host" && InvalidHost(value))
@@ -393,19 +341,16 @@ namespace RestSharp
         }
 
         /// <inheritdoc />
-        public IRestRequest AddHeaders(ICollection<KeyValuePair<string, string>> headers)
-        {
+        public IRestRequest AddHeaders(ICollection<KeyValuePair<string, string>> headers) {
             var duplicateKeys = headers
                 .GroupBy(pair => pair.Key.ToUpperInvariant())
                 .Where(group => group.Count() > 1)
                 .Select(group => group.Key)
                 .ToList();
 
-            if (duplicateKeys.Any())
-                throw new ArgumentException($"Duplicate header names exist: {string.Join(", ", duplicateKeys)}");
+            if (duplicateKeys.Any()) throw new ArgumentException($"Duplicate header names exist: {string.Join(", ", duplicateKeys)}");
 
-            foreach (var pair in headers)
-            {
+            foreach (var pair in headers) {
                 AddHeader(pair.Key, pair.Value);
             }
 
@@ -426,10 +371,8 @@ namespace RestSharp
             => AddParameter(name, value, encode ? ParameterType.QueryString : ParameterType.QueryStringWithoutEncode);
 
         /// <inheritdoc />
-        public IRestRequest AddDecompressionMethod(DecompressionMethods decompressionMethod)
-        {
-            if (!_allowedDecompressionMethods.Contains(decompressionMethod))
-                _allowedDecompressionMethods.Add(decompressionMethod);
+        public IRestRequest AddDecompressionMethod(DecompressionMethods decompressionMethod) {
+            if (!_allowedDecompressionMethods.Contains(decompressionMethod)) _allowedDecompressionMethods.Add(decompressionMethod);
 
             return this;
         }

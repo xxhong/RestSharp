@@ -17,14 +17,12 @@ using System.Collections.Generic;
 using System.Net;
 using JetBrains.Annotations;
 
-namespace RestSharp
-{
+namespace RestSharp {
     /// <summary>
     /// Container for data sent back from API
     /// </summary>
     [PublicAPI]
-    public interface IRestResponse
-    {
+    public interface IRestResponse {
         /// <summary>
         /// The RestRequest that was made to get this RestResponse
         /// </summary>
@@ -124,8 +122,7 @@ namespace RestSharp
     /// Container for data sent back from API including deserialized data
     /// </summary>
     /// <typeparam name="T">Type of data to deserialize to</typeparam>
-    public interface IRestResponse<T> : IRestResponse
-    {
+    public interface IRestResponse<T> : IRestResponse {
         /// <summary>
         /// Deserialized entity data
         /// </summary>

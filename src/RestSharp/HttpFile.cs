@@ -15,14 +15,12 @@
 using System;
 using System.IO;
 
-namespace RestSharp
-{
+namespace RestSharp {
     /// <summary>
     /// Container for HTTP file
     /// </summary>
     [Obsolete("The HttpFile class will be internal in future version")]
-    public class HttpFile
-    {
+    public class HttpFile {
         /// <summary>
         /// The length of data to be sent
         /// </summary>
@@ -31,21 +29,21 @@ namespace RestSharp
         /// <summary>
         /// Provides raw data for file
         /// </summary>
-        public Action<Stream> Writer { get; set; }
+        public Action<Stream> Writer { get; set; } = null!;
 
         /// <summary>
         /// Name of the file to use when uploading
         /// </summary>
-        public string FileName { get; set; }
+        public string FileName { get; set; } = null!;
 
         /// <summary>
         /// MIME content type of file
         /// </summary>
-        public string ContentType { get; set; }
+        public string? ContentType { get; set; }
 
         /// <summary>
         /// Name of the parameter
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 }

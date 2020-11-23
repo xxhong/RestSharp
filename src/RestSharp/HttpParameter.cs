@@ -15,22 +15,19 @@
 using System;
 using JetBrains.Annotations;
 
-namespace RestSharp
-{
+namespace RestSharp {
     /// <summary>
     /// Representation of an HTTP parameter (QueryString or Form value)
     /// </summary>
     [PublicAPI]
-    public class HttpParameter
-    {
+    public class HttpParameter {
         /// <summary>
         /// Creates a new instance of HttpParameter
         /// </summary>
         /// <param name="name">Header name</param>
         /// <param name="value">Header value</param>
         /// <param name="contentType">Parameter content type</param>
-        public HttpParameter(string name, string? value, string? contentType = null)
-        {
+        public HttpParameter(string name, string? value, string? contentType = null) {
             Name        = name;
             ContentType = contentType;
             Value       = value ?? "";

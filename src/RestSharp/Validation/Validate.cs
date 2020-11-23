@@ -14,13 +14,11 @@
 
 using System;
 
-namespace RestSharp.Validation
-{
+namespace RestSharp.Validation {
     /// <summary>
     /// Helper methods for validating values
     /// </summary>
-    public class Validate
-    {
+    public class Validate {
         /// <summary>
         /// Validate an integer value is between the specified values (exclusive of min/max)
         /// </summary>
@@ -28,8 +26,7 @@ namespace RestSharp.Validation
         /// <param name="min">Exclusive minimum value</param>
         /// <param name="max">Exclusive maximum value</param>
         [Obsolete("This method will be removed soon. If you use it, please copy the code to your project.")]
-        public static void IsBetween(int value, int min, int max)
-        {
+        public static void IsBetween(int value, int min, int max) {
             if (value < min || value > max) throw new ArgumentException($"Value ({value}) is not between {min} and {max}.");
         }
 
@@ -39,8 +36,7 @@ namespace RestSharp.Validation
         /// <param name="value">String to be validated</param>
         /// <param name="maxSize">Maximum length of the string</param>
         [Obsolete("This method will be removed soon. If you use it, please copy the code to your project.")]
-        public static void IsValidLength(string value, int maxSize)
-        {
+        public static void IsValidLength(string value, int maxSize) {
             if (value == null) return;
 
             if (value.Length > maxSize) throw new ArgumentException($"String is longer than max allowed size ({maxSize}).");

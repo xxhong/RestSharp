@@ -17,10 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RestSharp.Extensions
-{
-    public static class StringEncodingExtensions
-    {
+namespace RestSharp.Extensions {
+    public static class StringEncodingExtensions {
         /// <summary>
         /// Converts a byte array to a string, using its byte order mark to convert it to the right encoding.
         /// http://www.shrinkrays.net/code-snippets/csharp/an-extension-method-for-converting-a-byte-array-to-a-string.aspx
@@ -29,20 +27,16 @@ namespace RestSharp.Extensions
         /// <param name="encoding">Content encoding. Will fallback to UTF8 if not a valid encoding.</param>
         /// <returns>The byte as a string.</returns>
         [Obsolete("This method will be removed soon. If you use it, please copy the code to your project.")]
-        public static string AsString(this byte[] buffer, string? encoding)
-        {
+        public static string AsString(this byte[] buffer, string? encoding) {
             var enc = encoding.IsEmpty() ? Encoding.UTF8 : TryParseEncoding();
 
             return AsString(buffer, enc);
 
-            Encoding TryParseEncoding()
-            {
-                try
-                {
+            Encoding TryParseEncoding() {
+                try {
                     return Encoding.GetEncoding(encoding) ?? Encoding.UTF8;
                 }
-                catch (ArgumentException)
-                {
+                catch (ArgumentException) {
                     return Encoding.UTF8;
                 }
             }
@@ -57,6 +51,6 @@ namespace RestSharp.Extensions
         [Obsolete("This method will be removed soon. If you use it, please copy the code to your project.")]
         public static string AsString(this byte[] buffer) => AsString(buffer, Encoding.UTF8);
 
-        static string AsString(byte[] buffer, Encoding encoding) => buffer == null ? "" : encoding.GetString(buffer, 0, buffer.Length);
+        static string AsString(byte[]? buffer, Encoding encoding) => buffer == null ? "" : encoding.GetString(buffer, 0, buffer.Length);
     }
 }

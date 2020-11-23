@@ -14,14 +14,13 @@
 
 using System;
 
-namespace RestSharp.Deserializers
-{
+// ReSharper disable once CheckNamespace
+namespace RestSharp.Deserializers {
     /// <summary>
     /// Allows control how class and property names and values are deserialized by XmlAttributeDeserializer
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class, Inherited = false)]
-    public sealed class DeserializeAsAttribute : Attribute
-    {
+    public sealed class DeserializeAsAttribute : Attribute {
         /// <summary>
         /// The name to use for the serialized element
         /// </summary>

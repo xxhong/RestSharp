@@ -12,10 +12,8 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License. 
 
-namespace RestSharp.Serializers
-{
-    public interface ISerializer
-    {
+namespace RestSharp.Serializers {
+    public interface ISerializer {
         string ContentType { get; set; }
         string Serialize(object obj);
     }

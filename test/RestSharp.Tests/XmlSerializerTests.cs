@@ -7,32 +7,24 @@ using NUnit.Framework;
 using RestSharp.Serializers;
 using RestSharp.Tests.SampleClasses;
 
-namespace RestSharp.Tests
-{
+namespace RestSharp.Tests {
     [TestFixture]
-    public class XmlSerializerTests
-    {
-        public XmlSerializerTests()
-        {
+    public class XmlSerializerTests {
+        public XmlSerializerTests() {
             Thread.CurrentThread.CurrentCulture   = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InstalledUICulture;
         }
 
         [Test]
-        public void Can_serialize_a_list_of_items_with_interface_type()
-        {
-            var items = new NamedItems
-            {
-                Items = new List<INamed>
-                {
-                    new Person
-                    {
+        public void Can_serialize_a_list_of_items_with_interface_type() {
+            var items = new NamedItems {
+                Items = new List<INamed> {
+                    new Person {
                         Name      = "Foo",
                         Age       = 50,
                         Price     = 19.95m,
                         StartDate = new DateTime(2009, 12, 18, 10, 2, 23),
-                        Items = new List<Item>
-                        {
+                        Items = new List<Item> {
                             new Item {Name = "One", Value = 1},
                         }
                     },
@@ -41,41 +33,34 @@ namespace RestSharp.Tests
                 }
             };
 
-            var xml = new XmlSerializer();
-            var doc = xml.Serialize(items);
+            var xml      = new XmlSerializer();
+            var doc      = xml.Serialize(items);
             var expected = GetNamedItemsXDoc(CultureInfo.InvariantCulture);
 
             Assert.AreEqual(expected.ToString(), doc);
         }
 
         [Test]
-        public void Can_serialize_a_list_which_is_the_content_of_root_element()
-        {
-            var contacts = new Contacts
-            {
-                People = new List<Person>
-                {
-                    new Person
-                    {
+        public void Can_serialize_a_list_which_is_the_content_of_root_element() {
+            var contacts = new Contacts {
+                People = new List<Person> {
+                    new Person {
                         Name      = "Foo",
                         Age       = 50,
                         Price     = 19.95m,
                         StartDate = new DateTime(2009, 12, 18, 10, 2, 23),
-                        Items = new List<Item>
-                        {
+                        Items = new List<Item> {
                             new Item {Name = "One", Value   = 1},
                             new Item {Name = "Two", Value   = 2},
                             new Item {Name = "Three", Value = 3}
                         }
                     },
-                    new Person
-                    {
+                    new Person {
                         Name      = "Bar",
                         Age       = 23,
                         Price     = 23.23m,
                         StartDate = new DateTime(2009, 12, 23, 10, 23, 23),
-                        Items = new List<Item>
-                        {
+                        Items = new List<Item> {
                             new Item {Name = "One", Value   = 1},
                             new Item {Name = "Two", Value   = 2},
                             new Item {Name = "Three", Value = 3}
@@ -92,31 +77,25 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_serialize_a_list_which_is_the_root_element()
-        {
-            var pocoList = new PersonList
-            {
-                new Person
-                {
+        public void Can_serialize_a_list_which_is_the_root_element() {
+            var pocoList = new PersonList {
+                new Person {
                     Name      = "Foo",
                     Age       = 50,
                     Price     = 19.95m,
                     StartDate = new DateTime(2009, 12, 18, 10, 2, 23),
-                    Items = new List<Item>
-                    {
+                    Items = new List<Item> {
                         new Item {Name = "One", Value   = 1},
                         new Item {Name = "Two", Value   = 2},
                         new Item {Name = "Three", Value = 3}
                     }
                 },
-                new Person
-                {
+                new Person {
                     Name      = "Bar",
                     Age       = 23,
                     Price     = 23.23m,
                     StartDate = new DateTime(2009, 12, 23, 10, 23, 23),
-                    Items = new List<Item>
-                    {
+                    Items = new List<Item> {
                         new Item {Name = "One", Value   = 1},
                         new Item {Name = "Two", Value   = 2},
                         new Item {Name = "Three", Value = 3}
@@ -131,10 +110,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_Serialize_An_Object_To_Node_With_Attribute_And_Text_Content()
-        {
-            var note = new Note
-            {
+        public void Can_Serialize_An_Object_To_Node_With_Attribute_And_Text_Content() {
+            var note = new Note {
                 Id      = 1,
                 Title   = Note.TITLE,
                 Message = Note.MESSAGE
@@ -150,8 +127,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_serialize_Enum()
-        {
+        public void Can_serialize_Enum() {
             var enumClass = new ClassWithEnum {Color = Color.Red};
             var xml       = new XmlSerializer();
             var doc       = xml.Serialize(enumClass);
@@ -165,16 +141,13 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_serialize_simple_POCO()
-        {
-            var poco = new Person
-            {
+        public void Can_serialize_simple_POCO() {
+            var poco = new Person {
                 Name      = "Foo",
                 Age       = 50,
                 Price     = 19.95m,
                 StartDate = new DateTime(2009, 12, 18, 10, 2, 23),
-                Items = new List<Item>
-                {
+                Items = new List<Item> {
                     new Item {Name = "One", Value   = 1},
                     new Item {Name = "Two", Value   = 2},
                     new Item {Name = "Three", Value = 3}
@@ -188,10 +161,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_serialize_simple_POCO_With_Attribute_Options_Defined()
-        {
-            var poco = new WackyPerson
-            {
+        public void Can_serialize_simple_POCO_With_Attribute_Options_Defined() {
+            var poco = new WackyPerson {
                 Name      = "Foo",
                 Age       = 50,
                 Price     = 19.95m,
@@ -205,20 +176,15 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_serialize_simple_POCO_With_Attribute_Options_Defined_And_Property_Containing_IList_Elements()
-        {
-            var poco = new WackyPerson
-            {
+        public void Can_serialize_simple_POCO_With_Attribute_Options_Defined_And_Property_Containing_IList_Elements() {
+            var poco = new WackyPerson {
                 Name      = "Foo",
                 Age       = 50,
                 Price     = 19.95m,
                 StartDate = new DateTime(2009, 12, 18, 10, 2, 23),
-                ContactData = new ContactData
-                {
-                    EmailAddresses = new List<EmailAddress>
-                    {
-                        new EmailAddress
-                        {
+                ContactData = new ContactData {
+                    EmailAddresses = new List<EmailAddress> {
+                        new EmailAddress {
                             Address  = "test@test.com",
                             Location = "Work"
                         }
@@ -233,10 +199,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_serialize_simple_POCO_With_DateFormat_Specified()
-        {
-            var poco = new Person
-            {
+        public void Can_serialize_simple_POCO_With_DateFormat_Specified() {
+            var poco = new Person {
                 Name      = "Foo",
                 Age       = 50,
                 Price     = 19.95m,
@@ -250,10 +214,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_serialize_simple_POCO_With_Different_Root_Element()
-        {
-            var poco = new Person
-            {
+        public void Can_serialize_simple_POCO_With_Different_Root_Element() {
+            var poco = new Person {
                 Name      = "Foo",
                 Age       = 50,
                 Price     = 19.95m,
@@ -267,10 +229,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_serialize_simple_POCO_With_XmlFormat_Specified()
-        {
-            var poco = new Person
-            {
+        public void Can_serialize_simple_POCO_With_XmlFormat_Specified() {
+            var poco = new Person {
                 Name      = "Foo",
                 Age       = 50,
                 Price     = 19.95m,
@@ -285,10 +245,8 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Cannot_Serialize_An_Object_With_Two_Properties_With_Text_Content_Attributes()
-        {
-            var note = new WrongNote
-            {
+        public void Cannot_Serialize_An_Object_With_Two_Properties_With_Text_Content_Attributes() {
+            var note = new WrongNote {
                 Id   = 1,
                 Text = "What a note."
             };
@@ -296,18 +254,16 @@ namespace RestSharp.Tests
             var xml = new XmlSerializer();
 
             Assert.Throws(
-                typeof(ArgumentException), () =>
-                {
+                typeof(ArgumentException),
+                () => {
                     var doc = xml.Serialize(note);
                 }
             );
         }
 
         [Test]
-        public void Serializes_Properties_In_Specified_Order()
-        {
-            var ordered = new OrderedProperties
-            {
+        public void Serializes_Properties_In_Specified_Order() {
+            var ordered = new OrderedProperties {
                 Name      = "Name",
                 Age       = 99,
                 StartDate = new DateTime(2010, 1, 1)
@@ -319,13 +275,11 @@ namespace RestSharp.Tests
             Assert.AreEqual(expected.ToString(), doc);
         }
 
-        interface INamed
-        {
+        interface INamed {
             string Name { get; set; }
         }
 
-        class Person : INamed
-        {
+        class Person : INamed {
             public string Name { get; set; }
 
             public int Age { get; set; }
@@ -339,8 +293,7 @@ namespace RestSharp.Tests
             public bool? IsCool { get; set; }
         }
 
-        class Item : INamed
-        {
+        class Item : INamed {
             public string Name { get; set; }
 
             public int Value { get; set; }
@@ -348,14 +301,12 @@ namespace RestSharp.Tests
 
         enum Color { Red, Blue, Green }
 
-        class ClassWithEnum
-        {
+        class ClassWithEnum {
             public Color Color { get; set; }
         }
 
         [SerializeAs(Name = "Person")]
-        class WackyPerson
-        {
+        class WackyPerson {
             [SerializeAs(Name = "WackyName", Attribute = true)]
             public string Name { get; set; }
 
@@ -371,15 +322,13 @@ namespace RestSharp.Tests
             public ContactData ContactData { get; set; }
         }
 
-        class NamedItems
-        {
+        class NamedItems {
             [SerializeAs(Content = true)]
             public List<INamed> Items { get; set; }
         }
 
         [SerializeAs(Name = "People")]
-        class Contacts
-        {
+        class Contacts {
             [SerializeAs(Content = true)]
             public List<Person> People { get; set; }
         }
@@ -387,8 +336,7 @@ namespace RestSharp.Tests
         [SerializeAs(Name = "People")]
         class PersonList : List<Person> { }
 
-        class ContactData
-        {
+        class ContactData {
             public ContactData() => EmailAddresses = new List<EmailAddress>();
 
             [SerializeAs(Name = "email-addresses")]
@@ -396,8 +344,7 @@ namespace RestSharp.Tests
         }
 
         [SerializeAs(Name = "email-address")]
-        class EmailAddress
-        {
+        class EmailAddress {
             [SerializeAs(Name = "address")]
             public string Address { get; set; }
 
@@ -405,8 +352,7 @@ namespace RestSharp.Tests
             public string Location { get; set; }
         }
 
-        static XDocument GetNoteXDoc()
-        {
+        static XDocument GetNoteXDoc() {
             var doc  = new XDocument();
             var root = new XElement("Note");
 
@@ -419,8 +365,7 @@ namespace RestSharp.Tests
             return doc;
         }
 
-        static XDocument GetSimplePocoXDoc()
-        {
+        static XDocument GetSimplePocoXDoc() {
             var doc  = new XDocument();
             var root = new XElement("Person");
 
@@ -446,8 +391,7 @@ namespace RestSharp.Tests
             return doc;
         }
 
-        static XDocument GetSimplePocoXDocWithIsoDate()
-        {
+        static XDocument GetSimplePocoXDocWithIsoDate() {
             var doc  = new XDocument();
             var root = new XElement("Person");
 
@@ -463,8 +407,7 @@ namespace RestSharp.Tests
             return doc;
         }
 
-        static XDocument GetSimplePocoXDocWithXmlProperty()
-        {
+        static XDocument GetSimplePocoXDocWithXmlProperty() {
             var doc  = new XDocument();
             var root = new XElement("Person");
 
@@ -481,8 +424,7 @@ namespace RestSharp.Tests
             return doc;
         }
 
-        static XDocument GetSimplePocoXDocWithRoot()
-        {
+        static XDocument GetSimplePocoXDocWithRoot() {
             var doc   = new XDocument();
             var root  = new XElement("Result");
             var start = new XElement("Person");
@@ -503,8 +445,7 @@ namespace RestSharp.Tests
             return doc;
         }
 
-        static XDocument GetSimplePocoXDocWackyNames()
-        {
+        static XDocument GetSimplePocoXDocWackyNames() {
             var doc  = new XDocument();
             var root = new XElement("Person");
 
@@ -523,8 +464,7 @@ namespace RestSharp.Tests
             return doc;
         }
 
-        static XDocument GetSimplePocoXDocWackyNamesWithIListProperty()
-        {
+        static XDocument GetSimplePocoXDocWackyNamesWithIListProperty() {
             var doc  = new XDocument();
             var root = new XElement("Person");
 
@@ -554,8 +494,7 @@ namespace RestSharp.Tests
             return doc;
         }
 
-        static XDocument GetSortedPropsXDoc()
-        {
+        static XDocument GetSortedPropsXDoc() {
             var doc  = new XDocument();
             var root = new XElement("OrderedProperties");
 
@@ -568,8 +507,7 @@ namespace RestSharp.Tests
             return doc;
         }
 
-        static XDocument GetNamedItemsXDoc(IFormatProvider culture)
-        {
+        static XDocument GetNamedItemsXDoc(IFormatProvider culture) {
             var doc     = new XDocument();
             var root    = new XElement("NamedItems");
             var element = new XElement("Person");
@@ -594,8 +532,7 @@ namespace RestSharp.Tests
             return doc;
         }
 
-        static XDocument GetPeopleXDoc(IFormatProvider culture)
-        {
+        static XDocument GetPeopleXDoc(IFormatProvider culture) {
             var doc     = new XDocument();
             var root    = new XElement("People");
             var element = new XElement("Person");

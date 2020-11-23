@@ -14,30 +14,33 @@
 
 using RestSharp.Validation;
 
-namespace RestSharp.Authenticators
-{
+namespace RestSharp.Authenticators {
     /// <summary>
     /// JSON WEB TOKEN (JWT) Authenticator class.
     /// <remarks>https://tools.ietf.org/html/draft-ietf-oauth-json-web-token</remarks>
     /// </summary>
-    public class JwtAuthenticator : IAuthenticator
-    {
-        string _authHeader;
+    public class JwtAuthenticator : IAuthenticator {
+        string _authHeader = null!;
 
         // ReSharper disable once IntroduceOptionalParameters.Global
-        public JwtAuthenticator(string accessToken) => SetBearerToken(accessToken);
+        /// <summary>
+        /// Creates an authenticator with the token provided.
+        /// </summary>
+        /// <param name="accessToken">JWT token</param>
+        public JwtAuthenticator(string accessToken)
+            => SetBearerToken(accessToken);
 
         /// <summary>
         /// Set the new bearer token so the request gets the new header value
         /// </summary>
         /// <param name="accessToken"></param>
-        public void SetBearerToken(string accessToken)
-        {
+        public void SetBearerToken(string accessToken) {
             Ensure.NotEmpty(accessToken, nameof(accessToken));
 
             _authHeader = $"Bearer {accessToken}";
         }
 
+        /// <inheritdoc />
         public void Authenticate(IRestClient client, IRestRequest request)
             => request.AddOrUpdateParameter("Authorization", _authHeader, ParameterType.HttpHeader);
     }

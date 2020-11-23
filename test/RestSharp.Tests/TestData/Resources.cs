@@ -17,7 +17,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using RestSharp.Serialization.Json;
 
 namespace RestSharp.Tests.TestData {
     public static class Resources {
@@ -35,7 +34,5 @@ namespace RestSharp.Tests.TestData {
             using var reader       = new StreamReader(stream);
             return reader.ReadToEnd();
         }
-
-
     }
 }

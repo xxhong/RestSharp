@@ -25,13 +25,12 @@ using JetBrains.Annotations;
 using RestSharp.Authenticators;
 using RestSharp.Deserializers;
 using RestSharp.Serialization;
+
 #pragma warning disable 618
 
-namespace RestSharp
-{
+namespace RestSharp {
     [PublicAPI]
-    public partial interface IRestClient
-    {
+    public partial interface IRestClient {
         /// <summary>
         /// Replace the default serializer with a custom one
         /// </summary>
@@ -213,7 +212,7 @@ namespace RestSharp
         /// </summary>
         /// <param name="configurator">Configuration delegate for HttpWebRequest</param>
         void ConfigureWebRequest(Action<HttpWebRequest> configurator);
-        
+
         /// <summary>
         /// Adds or replaces a deserializer for the specified content type
         /// </summary>
@@ -271,7 +270,7 @@ namespace RestSharp
         /// <param name="request">Request to be executed</param>
         /// <param name="cancellationToken">Cancellation token</param>
         Task<IRestResponse> ExecuteAsync(IRestRequest request, CancellationToken cancellationToken = default);
-        
+
         /// <summary>
         /// Executes a GET-style request asynchronously, authenticating if needed
         /// </summary>

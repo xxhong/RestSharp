@@ -16,18 +16,15 @@ using System;
 using System.Globalization;
 using RestSharp.Extensions;
 
-namespace RestSharp.Serializers
-{
+namespace RestSharp.Serializers {
     /// <summary>
     /// Allows control how class and property names and values are serialized by XmlSerializer
     /// Currently not supported with the JsonSerializer
     /// When specified at the property level the class-level specification is overridden
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class, Inherited = false)]
-    public sealed class SerializeAsAttribute : Attribute
-    {
-        public SerializeAsAttribute()
-        {
+    public sealed class SerializeAsAttribute : Attribute {
+        public SerializeAsAttribute() {
             NameStyle = NameStyle.AsIs;
             Index     = int.MaxValue;
             Culture   = CultureInfo.InvariantCulture;
@@ -36,7 +33,7 @@ namespace RestSharp.Serializers
         /// <summary>
         /// The name to use for the serialized element
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Sets the value to be serialized as an Attribute instead of an Element
@@ -68,12 +65,10 @@ namespace RestSharp.Serializers
         /// </summary>
         /// <param name="input">The string to transform</param>
         /// <returns>String</returns>
-        public string TransformName(string input)
-        {
+        public string TransformName(string input) {
             var name = Name ?? input;
 
-            return NameStyle switch
-            {
+            return NameStyle switch {
                 NameStyle.CamelCase  => name.ToCamelCase(Culture),
                 NameStyle.PascalCase => name.ToPascalCase(Culture),
                 NameStyle.LowerCase  => name.ToLower(Culture),
