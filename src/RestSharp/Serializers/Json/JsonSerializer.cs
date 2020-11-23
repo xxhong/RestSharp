@@ -18,11 +18,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 using RestSharp.Deserializers;
 using RestSharp.Extensions;
+using RestSharp.Serializers.Json.SimpleJson;
 
+// ReSharper disable once CheckNamespace
 namespace RestSharp.Serialization.Json
 {
     public class JsonSerializer : IRestSerializer, IWithRootElement
@@ -38,9 +39,9 @@ namespace RestSharp.Serialization.Json
         /// <param name="obj">Object to serialize</param>
         /// <returns>JSON as String</returns>
         public string Serialize(object obj)
-            => IsSerializedString(obj, out var serializedString)
+            => (IsSerializedString(obj, out var serializedString)
                 ? serializedString
-                : SimpleJson.SerializeObject(obj);
+                : SimpleJson.SerializeObject(obj))!;
 
         /// <summary>
         /// Content type for serialized content
@@ -65,7 +66,7 @@ namespace RestSharp.Serialization.Json
         /// <summary>
         /// Determines if the object is already a serialized string.
         /// </summary>
-        static bool IsSerializedString(object obj, out string serializedString)
+        static bool IsSerializedString(object obj, out string? serializedString)
         {
             if (obj is string value)
             {
@@ -83,7 +84,7 @@ namespace RestSharp.Serialization.Json
             return false;
         }
 
-        object FindRoot(string content)
+        object? FindRoot(string content)
         {
             var json = SimpleJson.DeserializeObject(content);
 
@@ -215,8 +216,7 @@ namespace RestSharp.Serialization.Json
             return list;
         }
 
-        object ConvertValue(TypeInfo typeInfo, object value)
-        {
+        object? ConvertValue(TypeInfo typeInfo, object? value) {
             var stringValue = Convert.ToString(value, Culture);
 
             // check for nullable and extract underlying type

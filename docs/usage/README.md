@@ -2,10 +2,7 @@
 
 RestSharp works best as the foundation for a proxy class for your API. Here are a couple of examples from the <a href="http://github.com/twilio/twilio-csharp">Twilio</a> library.
 
-Create a class to contain your API proxy implementation with an `Execute` method for funneling all requests to the API. 
-This allows you to set commonly-used parameters and other settings (like authentication) shared across requests. 
-Because an account ID and secret key are required for every request you are required to pass those two values when 
-creating a new instance of the proxy. 
+Create a class to contain your API proxy implementation with an `Execute` method for funneling all requests to the API. This allows you to set commonly-used parameters and other settings (like authentication) shared across requests. Because an account ID and secret key are required for every request you are required to pass those two values when creating a new instance of the proxy. 
 
 ::: warning
 Note that exceptions from `Execute` are not thrown but are available in the `ErrorException` property.
@@ -83,14 +80,9 @@ public Call GetCall(string callSid)
 }
 ```
 
-There's some magic here that RestSharp takes care of so you don't have to.
+There's some magic here that RestSharp takes care of, so you don't have to.
 
-The API returns XML, which is automatically detected and deserialized to the Call object using the default `XmlDeserializer`.
-By default a RestRequest is made via a GET HTTP request. You can change this by setting the `Method` property of `RestRequest` 
-or specifying the method in the constructor when creating an instance (covered below).
-Parameters of type `UrlSegment` have their values injected into the URL based on a matching token name existing in the Resource property value. 
-`AccountSid` is set in `TwilioApi.Execute` because it is common to every request.
-We specify the name of the root element to start deserializing from. In this case, the XML returned is `<Response><Call>...</Call></Response>` and since the Response element itself does not contain any information relevant to our model, we start the deserializing one step down the tree.
+The API returns XML, which is automatically detected and deserialized to the Call object using the default `XmlDeserializer`. By default, the request is made as GET HTTP request. You can change this by setting the `Method` property of `RestRequest` or specifying the method in the constructor when creating an instance (covered below). Parameters of type `UrlSegment` have their values injected into the URL based on a matching token name existing in the Resource property value. `AccountSid` is set in `TwilioApi.Execute` because it is common to every request. We specify the name of the root element to start deserializing from. In this case, the XML returned is `<Response><Call>...</Call></Response>` and since the Response element itself does not contain any information relevant to our model, we start the deserializing one step down the tree.
 
 You can also make POST (and PUT/DELETE/HEAD/OPTIONS) requests:
 
@@ -118,15 +110,8 @@ public Call InitiateOutboundCall(CallOptions options)
 }
 ```
 
-This example also demonstrates RestSharp's lightweight validation helpers. 
-These helpers allow you to verify before making the request that the values submitted are valid. 
-Read more about Validation here.
+This example also demonstrates RestSharp's lightweight validation helpers. These helpers allow you to verify before making the request that the values submitted are valid. Read more about Validation here.
 
-All of the values added via AddParameter in this example will be submitted as a standard encoded form, 
-similar to a form submission made via a web page. If this were a GET-style request (GET/DELETE/OPTIONS/HEAD), 
-the parameter values would be submitted via the query string instead. You can also add header and cookie 
-parameters with `AddParameter`. To add all properties for an object as parameters, use `AddObject`. 
-To add a file for upload, use `AddFile` (the request will be sent as a multipart encoded form). 
-To include a request body like XML or JSON, use `AddXmlBody` or `AddJsonBody`.
+All the values added via AddParameter in this example will be submitted as a standard encoded form, similar to a form submission made via a web page. If this were a GET-style request (GET/DELETE/OPTIONS/HEAD), the parameter values would be submitted via the query string instead. You can also add header and cookie parameters with `AddParameter`. To add all properties for an object as parameters, use `AddObject`. To add a file for upload, use `AddFile` (the request will be sent as a multipart encoded form). To include a request body like XML or JSON, use `AddXmlBody` or `AddJsonBody`.
 
 

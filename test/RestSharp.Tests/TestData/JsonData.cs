@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using RestSharp.Serializers.Json.SimpleJson;
 using RestSharp.Tests.SampleClasses;
 
 namespace RestSharp.Tests.TestData

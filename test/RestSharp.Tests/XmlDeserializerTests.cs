@@ -8,6 +8,7 @@ using NUnit.Framework;
 using RestSharp.Deserializers;
 using RestSharp.Tests.SampleClasses;
 using RestSharp.Tests.SampleClasses.DeserializeAsTest;
+using static RestSharp.Tests.TestData.Resources;
 using Event = RestSharp.Tests.SampleClasses.Lastfm.Event;
 
 namespace RestSharp.Tests
@@ -16,10 +17,6 @@ namespace RestSharp.Tests
     public class XmlDeserializerTests
     {
         const string GuidString = "AC1FC4BC-087A-4242-B8EE-C53EBE9887A5";
-
-        public readonly string sampleDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleData");
-
-        string PathFor(string sampleFile) => Path.Combine(sampleDataPath, sampleFile);
 
         static string CreateUnderscoresXml()
         {
@@ -381,8 +378,7 @@ namespace RestSharp.Tests
         [Test]
         public void Able_to_use_alternative_name_for_arrays()
         {
-            var xmlpath = PathFor("header_and_rows.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("header_and_rows.xml");
             var xml     = new XmlDeserializer();
             var output  = xml.Deserialize<Header>(new RestResponse {Content = doc.ToString()});
 
@@ -393,7 +389,7 @@ namespace RestSharp.Tests
         }
 
         [Test]
-        public void Can_deal_with_value_attrbiute()
+        public void Can_deal_with_value_attribiute()
         {
             const string content = "<Color><Name>Green</Name><Value>255</Value></Color>";
             var          xml     = new XmlDeserializer();
@@ -475,8 +471,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Boolean_From_Number()
         {
-            var xmlpath  = PathFor("boolean_from_number.xml");
-            var doc      = XDocument.Load(xmlpath);
+            var doc  = LoadFromResource("boolean_from_number.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlDeserializer();
             var output   = d.Deserialize<BooleanTest>(response);
@@ -487,8 +482,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Boolean_From_String()
         {
-            var xmlpath  = PathFor("boolean_from_string.xml");
-            var doc      = XDocument.Load(xmlpath);
+            var doc  = LoadFromResource("boolean_from_string.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlDeserializer();
             var output   = d.Deserialize<BooleanTest>(response);
@@ -550,8 +544,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Directly_To_Lists_Off_Root_Element()
         {
-            var xmlpath = PathFor("directlists.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("directlists.xml");
             var xml     = new XmlDeserializer();
             var output  = xml.Deserialize<List<Database>>(new RestResponse {Content = doc.ToString()});
 
@@ -668,8 +661,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Eventful_Xml()
         {
-            var xmlpath  = PathFor("eventful.xml");
-            var doc      = XDocument.Load(xmlpath);
+            var doc  = LoadFromResource("eventful.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlDeserializer();
             var output   = d.Deserialize<VenueSearch>(response);
@@ -684,8 +676,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Goodreads_Xml()
         {
-            var xmlpath  = PathFor("Goodreads.xml");
-            var doc      = XDocument.Load(xmlpath);
+            var doc  = LoadFromResource("Goodreads.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlDeserializer();
             var output   = d.Deserialize<GoodReadsReviewCollection>(response);
@@ -698,8 +689,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_throw_format_exception_xml()
         {
-            var xmlpath = PathFor("GoodreadsFormatError.xml");
-            var doc = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("GoodreadsFormatError.xml");
             var response = new RestResponse { Content = doc.ToString() };
             var d = new XmlDeserializer();
             Assert.Throws(
@@ -714,8 +704,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Google_Weather_Xml()
         {
-            var xmlpath  = PathFor("GoogleWeather.xml");
-            var doc      = XDocument.Load(xmlpath);
+            var doc  = LoadFromResource("GoogleWeather.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlDeserializer();
             var output   = d.Deserialize<xml_api_reply>(response);
@@ -754,8 +743,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Lastfm_Xml()
         {
-            var xmlpath  = PathFor("Lastfm.xml");
-            var doc      = XDocument.Load(xmlpath);
+            var doc  = LoadFromResource("Lastfm.xml");
             var response = new RestResponse {Content = doc.ToString()};
             var d        = new XmlDeserializer();
             var output   = d.Deserialize<Event>(response);
@@ -771,8 +759,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Lists_of_Simple_Types()
         {
-            var xmlpath = PathFor("xmllists.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("xmllists.xml");
             var xml     = new XmlDeserializer();
 
             var output = xml.Deserialize<SimpleTypesListSample>(
@@ -908,8 +895,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Nested_List_Items_With_Matching_Class_Name()
         {
-            var xmlpath = PathFor("NestedListSample.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("NestedListSample.xml");
             var xml     = new XmlDeserializer();
             var output  = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
 
@@ -920,8 +906,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Nested_List_Items_Without_Matching_Class_Name()
         {
-            var xmlpath = PathFor("NestedListSample.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("NestedListSample.xml");
             var xml     = new XmlDeserializer();
             var output  = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
 
@@ -981,8 +966,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Parentless_aka_Inline_List_Items_With_Matching_Class_Name()
         {
-            var xmlpath = PathFor("InlineListSample.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("InlineListSample.xml");
             var xml     = new XmlDeserializer();
             var output  = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
 
@@ -993,8 +977,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Parentless_aka_Inline_List_Items_With_Matching_Class_Name_With_Additional_Property()
         {
-            var xmlpath = PathFor("InlineListSample.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("InlineListSample.xml");
             var xml     = new XmlDeserializer();
             var output  = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
 
@@ -1004,8 +987,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_Parentless_aka_Inline_List_Items_Without_Matching_Class_Name()
         {
-            var xmlpath = PathFor("InlineListSample.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("InlineListSample.xml");
             var xml     = new XmlDeserializer();
             var output  = xml.Deserialize<InlineListSample>(new RestResponse {Content = doc.ToString()});
 
@@ -1069,8 +1051,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_To_List_Inheritor_From_Custom_Root_With_Attributes()
         {
-            var xmlpath = PathFor("ListWithAttributes.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("ListWithAttributes.xml");
             var xml     = new XmlDeserializer {RootElement = "Calls"};
             var output  = xml.Deserialize<TwilioCallList>(new RestResponse {Content = doc.ToString()});
 
@@ -1082,8 +1063,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_To_Standalone_List_With_Matching_Class_Case()
         {
-            var xmlpath = PathFor("InlineListSample.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("InlineListSample.xml");
             var xml     = new XmlDeserializer();
             var output  = xml.Deserialize<List<image>>(new RestResponse {Content = doc.ToString()});
 
@@ -1094,8 +1074,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Deserialize_To_Standalone_List_Without_Matching_Class_Case()
         {
-            var xmlpath = PathFor("InlineListSample.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("InlineListSample.xml");
             var xml     = new XmlDeserializer();
             var output  = xml.Deserialize<List<Image>>(new RestResponse {Content = doc.ToString()});
 
@@ -1134,8 +1113,7 @@ namespace RestSharp.Tests
         [Test]
         public void Can_Use_DeserializeAs_Attribute_for_List()
         {
-            var xmlpath = PathFor("deserialize_as_list.xml");
-            var doc     = XDocument.Load(xmlpath);
+            var doc = LoadFromResource("deserialize_as_list.xml");
             var xml     = new XmlDeserializer();
             var output  = xml.Deserialize<List<Oddball>>(new RestResponse {Content = doc.ToString()});
 
